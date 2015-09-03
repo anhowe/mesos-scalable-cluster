@@ -20,6 +20,11 @@ VMNAME=`hostname`
 VMNUMBER=`echo $VMNAME | sed 's/.*[^0-9]\([0-9]\+\)*$/\1/'`
 VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
 
+echo "Master Count: $MASTERCOUNT"
+echo "Master Mode: $MASTERMODE"
+echo "vmname: $VMNAME"
+echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
+
 ###################
 # Common Functions
 ###################
@@ -33,6 +38,9 @@ ismaster ()
     return 1
   fi
 }
+if ismaster ; then
+  echo "this node is a master"
+fi
 
 isagent()
 {
@@ -47,6 +55,9 @@ isagent()
     return 0
   fi
 }
+if isagent ; then
+  echo "this node is an agent"
+fi
 
 zkconfig()
 {
@@ -56,11 +67,11 @@ zkconfig()
   do
     if [ "$i" -gt "1" ]
     then
-      zkconfig+=","
+      zkconfig = "${zkconfig},"
     fi
-    zkconfig+="${VMPREFIX}${i}:2181"
+    zkconfig = "${zkconfig}${VMPREFIX}${i}:2181"
   done
-  zkconfig+="/${postfix}"
+  zkconfig = "${zkconfig}/${postfix}"
   echo $zkconfig
 }
 
