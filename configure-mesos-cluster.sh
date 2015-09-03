@@ -62,17 +62,17 @@ fi
 zkconfig()
 {
   postfix="$1"
-  zkconfig="zk://"
+  zkconfigstr="zk://"
   for i in `seq 1 $MASTERCOUNT` ;
   do
     if [ "$i" -gt "1" ]
     then
-      zkconfig = "${zkconfig},"
+      zkconfigstr="${zkconfigstr},"
     fi
-    zkconfig = "${zkconfig}${VMPREFIX}${i}:2181"
+    zkconfigstr="${zkconfigstr}${VMPREFIX}${i}:2181"
   done
-  zkconfig = "${zkconfig}/${postfix}"
-  echo $zkconfig
+  zkconfigstr="${zkconfigstr}/${postfix}"
+  echo $zkconfigstr
 }
 
 ##################
