@@ -1,0 +1,23 @@
+{
+  "newStorageAccountNamePrefix": {
+    "value": "mesosonebox0903a"
+  },
+  "adminUsername": {
+    "value": "azureuser"
+  },
+  "adminPassword": {
+    "value": "Docker4Me$"
+  },
+  "dnsNameForPublicIP": {
+    "value": "mesosscalable0903a"
+  },
+  "masterConfiguration": {
+    "value": "masters-are-agents"
+  },
+  "nodeCount": {
+    "value": 3
+  },
+  "masterCount": {
+    "value": 1
+  }
+}

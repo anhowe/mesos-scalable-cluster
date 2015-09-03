@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Create a Swarm + Mesos cluster",
+  "description": "This template creates an Apache Mesos cluster with Marathon on a configurable number of nodes.",
+  "summary": "Create a Mesos cluster on Azure.",
+  "githubUsername": "anhowe",
+  "dateUpdated": "2015-09-01"
+}
