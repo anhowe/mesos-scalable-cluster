@@ -118,7 +118,7 @@ if ismaster ; then
   sudo cp /etc/mesos/zk /etc/marathon/conf/master
   zkmarathonconfig=$(zkconfig "marathon")
   echo $zkmarathonconfig | sudo tee /etc/marathon/conf/zk
-  echo 'Mesos Cluster' | sudo tee /etc/mesos-master/cluster
+  echo 'Mesos Cluster on Microsoft Azure' | sudo tee /etc/mesos-master/cluster
 fi
 
 #########################
