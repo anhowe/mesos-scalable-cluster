@@ -1,6 +1,6 @@
 {
   "newStorageAccountNamePrefix": {
-    "value": "mesosscalable0903c"
+    "value": "mesosscalable0903f"
   },
   "adminUsername": {
     "value": "azureuser"
@@ -9,13 +9,13 @@
     "value": "Docker4Me$"
   },
   "dnsNameForPublicIP": {
-    "value": "mesosscalable0903c"
+    "value": "mesosscalable0903f"
   },
   "vmsize" : {
     "value": "Standard_D1"
   },
   "nodeCount": {
-    "value": 6
+    "value": 4
   },
   "masterCount": {
     "value": 3

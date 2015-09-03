@@ -433,7 +433,7 @@
           "fileUris": [
             "https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/configure-mesos-cluster.sh"
           ],
-          "commandToExecute": "[concat('sh configure-mesos-cluster.sh ', parameters('masterCount'), ' ', parameters('masterConfiguration'))]"
+          "commandToExecute": "[concat('/bin/bash configure-mesos-cluster.sh ', parameters('masterCount'), ' ', parameters('masterConfiguration'))]"
         }
       }
     }
