@@ -26,13 +26,12 @@
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
     },
-    "masterConfiguration": {
+    "vmSize": {
       "type": "string",
-      "defaultValue": "masters-are-agents",
-      "allowedValues": [
-        "masters-are-agents",
-        "masters-are-not-agents"
-      ]
+      "defaultValue": "Standard_D1",
+      "metadata": {
+        "description": "The size of the Virtual Machine."
+      }
     },
     "nodeCount": {
       "type": "int",
@@ -51,11 +50,18 @@
       "metadata": {
         "description": "The number of mesos masters for the cluster."
       }
+    },
+    "masterConfiguration": {
+      "type": "string",
+      "defaultValue": "masters-are-agents",
+      "allowedValues": [
+        "masters-are-agents",
+        "masters-are-not-agents"
+      ]
     }
   },
   "variables": {
     "vmNamePrefix": "node",
-    "vmSize": "Standard_D2",
     "availabilitySetNodes": "avail-set",
     "osImagePublisher": "Canonical",
     "osImageOffer": "UbuntuServer",
@@ -82,7 +88,7 @@
     "nodesLbIPConfigID": "[concat(variables('nodesLbID'),'/frontendIPConfigurations/', variables('nodesLbIPConfigName'))]",
     "nodesLbBackendPoolName": "node-pool",
     "validateNodeGreaterThanEqualMasterCount": "[div(1, div(parameters('nodeCount'),parameters('masterCount')))]",
-    "validateNoMoreThan100Nodes":"[div(1,div(100,parameters('nodeCount')))]"
+    "validateNoMoreThan10Nodes":"[div(1,div(10,parameters('nodeCount')))]"
   },
   "resources": [
     {
@@ -268,6 +274,90 @@
               "backendPort": 22,
               "enableFloatingIP": false
             }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '4')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2214,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '5')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2215,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '6')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2216,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '7')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2217,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '8')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2218,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '9')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2219,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',variables('vmNamePrefix'), '10')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2220,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
           }
         ]
       }
@@ -291,7 +381,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetNodes'))]"
         },
         "hardwareProfile": {
-          "vmSize": "[variables('vmSize')]"
+          "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
           "computername": "[concat(variables('vmNamePrefix'), copyIndex(1))]",
