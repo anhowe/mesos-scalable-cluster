@@ -114,6 +114,13 @@
       "properties": {
         "accountType": "[variables('storageAccountType')]"
       }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySet')]",
+      "location": "[resourceGroup().location]",
+      "properties": {}
     }
   ]
 }
