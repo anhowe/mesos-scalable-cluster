@@ -258,7 +258,6 @@
         "count": "[parameters('masterCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', parameters('masterVMNamePrefix'), copyIndex(1), '-nic')]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySet'))]"
       ],
