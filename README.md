@@ -12,6 +12,8 @@ Once your cluster has been created you will have a resource group containing 3 p
 
 3. if chosen, a jumpbox.  The jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop.
 
+The following image is an example of a cluster with 1 jumpbox, 3 masters, and 3 agents:
+
 ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos.png)
 
 You can see Mesos on port 5050, Marathon on port 8080, and Swarm on port 2375.
