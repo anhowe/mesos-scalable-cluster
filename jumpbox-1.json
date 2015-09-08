@@ -122,48 +122,6 @@
           }
         ]
       }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[variables('vmName')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('vmName'), '-nic')]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "Standard_D2"
-        },
-        "osProfile": {
-          "computername": "jumpbox1",
-          "adminUsername": "azureuser",
-          "adminPassword": "Docker4Me$"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "Canonical",
-            "offer": "UbuntuServer",
-            "sku": "14.04.3-LTS",
-            "version": "latest"
-          },
-          "osDisk": {
-            "name": "[concat(variables('vmName'),'-osdisk')]",
-            "vhd": {
-              "uri": "[concat('http://', parameters('newStorageAccountName'), '.blob.core.windows.net/vhds/', variables('vmName'), '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmName'), '-nic'))]"
-            }
-          ]
-        }
-      }
     }
   ]
 }
