@@ -122,6 +122,48 @@
           }
         ]
       }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('vmName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('vmName'), '-nic')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('jumpboxVMSize')]"
+        },
+        "osProfile": {
+          "computername": "[variables('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('osImagePublisher')]",
+            "offer": "[parameters('osImageOffer')]",
+            "sku": "[parameters('osImageSKU')]",
+            "version": "[parameters('osImageVersion')]"
+          },
+          "osDisk": {
+            "name": "[concat(variables('vmName'),'-osdisk')]",
+            "vhd": {
+              "uri": "[concat('http://', parameters('newStorageAccountName'), '.blob.core.windows.net/vhds/', variables('vmName'), '-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmName'), '-nic'))]"
+            }
+          ]
+        }
+      }
     }
   ]
 }
