@@ -10,6 +10,8 @@
 # - mesos agent
 ###########################################################
 
+echo "starting mesos cluster configuration"
+
 #############
 # Parameters
 #############
@@ -151,3 +153,5 @@ else
   echo manual | sudo tee /etc/init/mesos-slave.override
   sudo stop mesos-slave
 fi
+
+echo "completed mesos cluster configuration"
