@@ -93,6 +93,33 @@
       }
     }
   },
-  "variables": {},
-  "resources": []
+  "variables": {
+    "availabilitySet": "masterAvailabilitySet",
+    "nodesLbName": "nodeslb",
+    "nodesLbID": "[resourceId('Microsoft.Network/loadBalancers',variables('nodesLbName'))]",
+    "nodesLbIPConfigName": "NodesLBFrontEnd",
+    "nodesLbIPConfigID": "[concat(variables('nodesLbID'),'/frontendIPConfigurations/', variables('nodesLbIPConfigName'))]",
+    "nodesLbBackendPoolName": "node-pool"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySet')]",
+      "location": "[resourceGroup().location]",
+      "properties": {}
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('dnsNameForContainerServicePublicIP')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsNameForContainerServicePublicIP')]"
+        }
+      }
+    }
+  ]
 }
