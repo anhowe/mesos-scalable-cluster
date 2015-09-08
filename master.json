@@ -247,6 +247,57 @@
           }
         ]
       }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('masterVMNamePrefix'), copyIndex(1))]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoopNode",
+        "count": "[parameters('masterCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('masterVMNamePrefix'), copyIndex(1), '-nic')]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySet'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySet'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('masterVMSize')]"
+        },
+        "osProfile": {
+          "computername": "[concat(parameters('masterVMNamePrefix'), copyIndex(1))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('osImagePublisher')]",
+            "offer": "[parameters('osImageOffer')]",
+            "sku": "[parameters('osImageSKU')]",
+            "version": "[parameters('osImageVersion')]"
+          },
+          "osDisk": {
+            "name": "[concat(parameters('masterVMNamePrefix'), copyIndex(1),'-osdisk')]",
+            "vhd": {
+              "uri": "[concat('http://', parameters('newStorageAccountName'), '.blob.core.windows.net/vhds/', parameters('masterVMNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('masterVMNamePrefix'), copyIndex(1), '-nic'))]"
+            }
+          ]
+        }
+      }
     }
   ]
 }
