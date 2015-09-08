@@ -16,7 +16,7 @@ The following image is an example of a cluster with 1 jumpbox, 3 masters, and 3 
 
 ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos.png)
 
-You can see Mesos on port 5050, Marathon on port 8080, and Swarm on port 2375.
+You can see Mesos on port 5050, Marathon on port 8080, and Swarm on port 2375.  All VMs are on the same private subnet, 10.0.0.0/24, and fully accessible to each other.
 
 Below are the parameters that the template expects:
 
