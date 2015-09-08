@@ -63,7 +63,7 @@
       }
     },
     "masterVMNamePrefix": {
-      "type": "int",
+      "type": "string",
       "metadata": {
         "description": "The vm name prefix of the master"
       }
