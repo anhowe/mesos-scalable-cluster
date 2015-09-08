@@ -120,6 +120,96 @@
           "domainNameLabel": "[parameters('dnsNameForContainerServicePublicIP')]"
         }
       }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "name": "[variables('nodesLbName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForContainerServicePublicIP'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "[variables('nodesLbIPConfigName')]",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('dnsNameForContainerServicePublicIP'))]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "[variables('nodesLbBackendPoolName')]"
+          }
+        ],
+        "probes": [],
+        "loadBalancingRules": [],
+        "inboundNatRules": [
+          {
+            "name": "[concat('SSH-',parameters('masterVMNamePrefix'), '1')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2211,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',parameters('masterVMNamePrefix'), '2')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2212,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',parameters('masterVMNamePrefix'), '3')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2213,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',parameters('masterVMNamePrefix'), '4')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2214,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "[concat('SSH-',parameters('masterVMNamePrefix'), '5')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 2215,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          }
+        ]
+      }
     }
   ]
 }
