@@ -210,6 +210,43 @@
           }
         ]
       }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(parameters('masterVMNamePrefix'), copyIndex(1), '-nic')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoopNode",
+        "count": "[parameters('masterCount')]"
+      },
+      "dependsOn": [
+        "[variables('nodesLbID')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipConfigNode",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[concat(split(parameters('subnetPrefix'),'0/24')[0], copyIndex(masterFirstAddr))]",
+              "subnet": {
+                "id": "[parameters('subnetRef')]"
+              },
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(variables('nodesLbID'), '/backendAddressPools/', variables('nodesLbBackendPoolName'))]"
+                }
+              ],
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(variables('nodesLbID'),'/inboundNatRules/SSH-',parameters('masterVMNamePrefix'),copyIndex(1))]"
+                }
+              ]
+            }
+          }
+        ]
+      }
     }
   ]
 }
