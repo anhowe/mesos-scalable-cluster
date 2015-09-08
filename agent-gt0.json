@@ -145,6 +145,57 @@
           }
         ]
       }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('agentVMNamePrefix'), copyIndex(1))]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoopNode",
+        "count": "[parameters('agentCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))))]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('agentVMNamePrefix'), copyIndex(1), '-nic')]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySet'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySet'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('agentVMsize')]"
+        },
+        "osProfile": {
+          "computername": "[concat(parameters('agentVMNamePrefix'), copyIndex(1))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('osImagePublisher')]",
+            "offer": "[parameters('osImageOffer')]",
+            "sku": "[parameters('osImageSKU')]",
+            "version": "[parameters('osImageVersion')]"
+          },
+          "osDisk": {
+            "name": "[concat(parameters('agentVMNamePrefix'), copyIndex(1),'-osdisk')]",
+            "vhd": {
+              "uri": "[concat('http://', parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))), '.blob.core.windows.net/vhds/', parameters('masterVMNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('agentVMNamePrefix'), copyIndex(1), '-nic'))]"
+            }
+          ]
+        }
+      }
     }
   ]
 }
