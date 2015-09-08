@@ -8,12 +8,6 @@
         "description": "Unique DNS Name Prefix for the Storage Account where the Virtual Machine's disks will be placed.  StorageAccounts may contain at most variables('vmsPerStorageAccount')"
       }
     },
-    "vmCountInFirstStorageAccount": {
-      "type": "int",
-      "metadata": {
-        "description": "The count of vms already in the first storage account"
-      }
-    },
     "vmsPerStorageAccount": {
       "type": "int",
       "metadata": {
