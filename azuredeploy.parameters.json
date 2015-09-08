@@ -1,15 +1,15 @@
 {
   "newStorageAccountNamePrefix": {
-    "value": "mesosscalable0907a"
+    "value": "mesosscalable0908"
   },
   "adminPassword": {
-    "value": "Docker4Me$"
+    "value": "password1234$"
   },
   "dnsNameForContainerServicePublicIP": {
-    "value": "mesosscalable0907a"
+    "value": "mesosscalable0908"
   },
   "dnsNameForJumpboxPublicIP": {
-    "value": "mesosscalablejb0907a"
+    "value": "mesosscalablejb0908"
   },
   "agentCount": {
     "value": 3
