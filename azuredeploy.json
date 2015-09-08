@@ -8,33 +8,27 @@
         "description": "Unique DNS Name Prefix for the Storage Account where the Virtual Machine's disks will be placed.  StorageAccounts may contain at most variables('vmsPerStorageAccount')"
       }
     },
-    "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "User name for the Virtual Machine."
-      }
-    },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Password for the Virtual Machine."
       }
     },
-    "dnsNameForPublicIP": {
+    "dnsNameForJumpboxPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the Jumpbox."
+      }
+    },
+    "dnsNameForContainerServicePublicIP": {
       "type": "string",
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
     },
-    "vmSize": {
-      "type": "string",
-      "defaultValue": "Standard_D1",
-      "metadata": {
-        "description": "The size of the Virtual Machine."
-      }
-    },
-    "nodeCount": {
+    "agentCount": {
       "type": "int",
+      "defaultValue": 0,
       "metadata": {
         "description": "The number of mesos masters for the cluster."
       }
@@ -51,6 +45,17 @@
         "description": "The number of mesos masters for the cluster."
       }
     },
+    "jumpboxCount": {
+      "type": "int",
+      "defaultValue": 0,
+      "allowedValues": [
+        0,
+        1
+      ],
+      "metadata": {
+        "description": "The number of mesos masters for the cluster."
+      }
+    },
     "masterConfiguration": {
       "type": "string",
       "defaultValue": "masters-are-agents",
@@ -58,69 +63,126 @@
         "masters-are-agents",
         "masters-are-not-agents"
       ]
+    },
+    "agentVMsize": {
+      "type": "string",
+      "defaultValue": "Standard_D1",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2",
+        "Standard_D3",
+        "Standard_D4",
+        "Standard_D11",
+        "Standard_D12",
+        "Standard_D13",
+        "Standard_D14"
+      ],
+      "metadata": {
+        "description": "The size of the Virtual Machine."
+      }
+    },
+    "masterVMsize": {
+      "type": "string",
+      "defaultValue": "Standard_D1",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2",
+        "Standard_D3",
+        "Standard_D4",
+        "Standard_D11",
+        "Standard_D12",
+        "Standard_D13",
+        "Standard_D14"
+      ],
+      "metadata": {
+        "description": "The size of the Virtual Machine."
+      }
+    },
+    "jumpboxVMSize": {
+      "type": "string",
+      "defaultValue": "Standard_D2",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2",
+        "Standard_D3",
+        "Standard_D4",
+        "Standard_D11",
+        "Standard_D12",
+        "Standard_D13",
+        "Standard_D14"
+      ],
+      "metadata": {
+        "description": "The size of the Virtual Machine."
+      }
+    },
+    "clusterPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The prefix to identify the cluster."
+      }
     }
   },
   "variables": {
-    "vmNamePrefix": "node",
-    "availabilitySetNodes": "avail-set",
+    "adminUsername": "azureuser",
+    "masterVMNamePrefix": "[concat(parameters('clusterPrefix'),'master')]",
+    "agentVMNamePrefix": "[concat(parameters('clusterPrefix'),'agent')]",
+    "jumpboxVMNamePrefix": "[concat(parameters('clusterPrefix'),'jumpbox')]",
     "osImagePublisher": "Canonical",
     "osImageOffer": "UbuntuServer",
-    "osImageSKU" : "14.04.3-LTS",
-    "publicIPAddressName": "myPublicIP",
-    "publicIPAddressType": "Dynamic",
-    "OSDiskName": "osdisk",
-    "vmsPerStorageAccount": 20,
-    "storageAccountsCount": "[add(div(parameters('nodeCount'), variables('vmsPerStorageAccount')), 1)]",
-    "nicName": "vmNic",
+    "osImageSKU": "14.04.3-LTS",
+    "osImageVersion": "latest",
     "virtualNetworkName": "VNET",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "subnetName": "Subnet",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "addressPrefix": "10.0.0.0/16",
     "subnetPrefix": "10.0.0.0/24",
+    "jumpboxAddr": 4,
+    "masterFirstAddr": 5,
+    "agentFirstAddr": 100,
     "nsgName": "node-nsg",
     "nsgID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgName'))]",
-    "storageAccountType": "Standard_LRS",
-    "vhdBlobContainer": "vhds",
-    "nodesLbName": "nodeslb",
-    "nodesLbID": "[resourceId('Microsoft.Network/loadBalancers',variables('nodesLbName'))]",
-    "nodesLbIPConfigName": "NodesLBFrontEnd",
-    "nodesLbIPConfigID": "[concat(variables('nodesLbID'),'/frontendIPConfigurations/', variables('nodesLbIPConfigName'))]",
-    "nodesLbBackendPoolName": "node-pool",
-    "validateNodeGreaterThanEqualMasterCount": "[div(1, div(parameters('nodeCount'),parameters('masterCount')))]",
-    "validateNoMoreThan10Nodes":"[div(1,div(10,parameters('nodeCount')))]"
+    "storageAccountType": "Standard_GRS",
+    "customScriptLocation": "https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/",
+    "agentFiles": [
+      "agent-0.json",
+      "agent-gt0.json"
+    ],
+    "agentFile": "[variables('agentFiles')[mod(add(parameters('agentCount'),2),add(parameters('agentCount'),1))]]",
+    "validateNoMoreThan50Agents": "[div(1,div(50,parameters('agentCount')))]"
   },
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('newStorageAccountNamePrefix'),copyIndex(1))]",
+      "name": "[concat(parameters('newStorageAccountNamePrefix'),'0')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoopNode",
-        "count": "[variables('storageAccountsCount')]"
-      },
       "properties": {
         "accountType": "[variables('storageAccountType')]"
       }
     },
     {
       "apiVersion": "2015-06-15",
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "[variables('availabilitySetNodes')]",
-      "location": "[resourceGroup().location]",
-      "properties": {}
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('publicIPAddressName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('nsgName')]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
-        }
+        "securityRules": [
+          {
+            "name": "ssh",
+            "properties": {
+              "description": "SSH",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 200,
+              "direction": "Inbound"
+            }
+          }
+        ]
       }
     },
     {
@@ -151,289 +213,184 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('nsgName')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "securityRules": [
-          {
-            "name": "ssh",
-            "properties": {
-              "description": "SSH",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "22",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 200,
-              "direction": "Inbound"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('vmNamePrefix'), copyIndex(1), '-nic')]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "nicLoopNode",
-        "count": "[parameters('nodeCount')]"
-      },
+      "apiVersion": "2015-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "createMasterNodes",
       "dependsOn": [
-        "[concat('Microsoft.Network/loadBalancers/', variables('nodesLbName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountNamePrefix'), '0')]",
+        "[variables('vnetID')]"
       ],
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipConfigNode",
-            "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[concat(split(variables('subnetPrefix'),'0/24')[0], copyIndex(101))]",
-              "subnet": {
-                "id": "[variables('subnetRef')]"
-              },
-              "loadBalancerBackendAddressPools": [
-                {
-                  "id": "[concat(variables('nodesLbID'), '/backendAddressPools/', variables('nodesLbBackendPoolName'))]"
-                }
-              ],
-              "loadBalancerInboundNatRules": [
-                {
-                  "id": "[concat(variables('nodesLbID'),'/inboundNatRules/SSH-',variables('vmNamePrefix'),copyIndex(1))]"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "name": "[variables('nodesLbName')]",
-      "type": "Microsoft.Network/loadBalancers",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
-      ],
-      "properties": {
-        "frontendIPConfigurations": [
-          {
-            "name": "[variables('nodesLbIPConfigName')]",
-            "properties": {
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
-              }
-            }
-          }
-        ],
-        "backendAddressPools": [
-          {
-            "name": "[variables('nodesLbBackendPoolName')]"
-          }
-        ],
-        "probes": [],
-        "loadBalancingRules": [],
-        "inboundNatRules": [
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '1')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2211,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '2')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2212,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '3')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2213,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '4')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2214,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '5')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2215,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '6')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2216,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '7')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2217,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '8')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2218,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '9')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2219,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "[concat('SSH-',variables('vmNamePrefix'), '10')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('nodesLbIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 2220,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmNamePrefix'), copyIndex(1))]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoopNode",
-        "count": "[parameters('nodeCount')]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),parameters('nodeCount'))))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('vmNamePrefix'), copyIndex(1), '-nic')]",
-        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetNodes'))]"
-      ],
-      "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetNodes'))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('customScriptLocation'), 'master.json')]",
+          "contentVersion": "1.0.0.0"
         },
-        "hardwareProfile": {
-          "vmSize": "[parameters('vmSize')]"
-        },
-        "osProfile": {
-          "computername": "[concat(variables('vmNamePrefix'), copyIndex(1))]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('osImagePublisher')]",
-            "offer": "[variables('osImageOffer')]",
-            "sku": "[variables('osImageSKU')]",
-            "version": "latest"
+        "parameters": {
+          "newStorageAccountName": {
+            "value": "[concat(parameters('newStorageAccountNamePrefix'), '0')]"
           },
-          "osDisk": {
-            "name": "[concat(variables('vmNamePrefix'), copyIndex(1),'-osdisk')]",
-            "vhd": {
-              "uri": "[concat('http://', parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),parameters('nodeCount'))), '.blob.core.windows.net/', variables('vhdBlobContainer'), '/', variables('vmNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+          "adminUsername": {
+            "value": "[variables('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "dnsNameForContainerServicePublicIP": {
+            "value": "[parameters('dnsNameForContainerServicePublicIP')]"
+          },
+          "masterVMSize": {
+            "value": "[parameters('masterVMSize')]"
+          },
+          "masterCount": {
+            "value": "[parameters('masterCount')]"
+          },
+          "masterConfiguration": {
+            "value": "[parameters('masterConfiguration')]"
+          },
+          "subnetPrefix": {
+            "value": "[variables('subnetPrefix')]"
+          },
+          "subnetRef": {
+            "value": "[variables('subnetRef')]"
+          },
+          "masterFirstAddr": {
+            "value": "[variables('masterFirstAddr')]"
+          },
+          "masterVMNamePrefix": {
+            "value": "[variables('masterVMNamePrefix')]"
+          },
+          "osImagePublisher": {
+            "value": "[variables('osImagePublisher')]"
+          },
+          "osImageOffer": {
+            "value": "[variables('osImageOffer')]"
+          },
+          "osImageSKU" : {
+            "value": "[variables('osImageSKU')]"
+          },
+          "osImageVersion" : {
+            "value": "[variables('osImageVersion')]"
           }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmNamePrefix'), copyIndex(1), '-nic'))]"
-            }
-          ]
         }
       }
     },
     {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePrefix'), copyIndex(1), '/configuremaster')]",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoopNode",
-        "count": "[parameters('nodeCount')]"
-      },
+      "apiVersion": "2015-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "createAgents",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmNamePrefix'), copyIndex(1))]"
+        "[variables('vnetID')]"
       ],
       "properties": {
-        "publisher": "Microsoft.OSTCExtensions",
-        "type": "CustomScriptForLinux",
-        "typeHandlerVersion": "1.2",
-        "settings": {
-          "fileUris": [
-            "https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/configure-mesos-cluster.sh"
-          ],
-          "commandToExecute": "[concat('/bin/bash configure-mesos-cluster.sh ', parameters('masterCount'), ' ', parameters('masterConfiguration'))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('customScriptLocation'), variables('agentFile'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "newStorageAccountNamePrefix": {
+            "value": "[concat(parameters('newStorageAccountNamePrefix'))]"
+          },
+          "adminUsername": {
+            "value": "[variables('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "agentVMSize": {
+            "value": "[parameters('agentVMSize')]"
+          },
+          "agentCount": {
+            "value": "[parameters('agentCount')]"
+          },
+          "masterCount": {
+            "value": "[parameters('masterCount')]"
+          },
+          "subnetPrefix": {
+            "value": "[variables('subnetPrefix')]"
+          },
+          "subnetRef": {
+            "value": "[variables('subnetRef')]"
+          },
+          "agentFirstAddr": {
+            "value": "[variables('agentFirstAddr')]"
+          },
+          "masterVMNamePrefix": {
+            "value": "[variables('masterVMNamePrefix')]"
+          },
+          "agentVMNamePrefix": {
+            "value": "[variables('agentVMNamePrefix')]"
+          },
+          "osImagePublisher": {
+            "value": "[variables('osImagePublisher')]"
+          },
+          "osImageOffer": {
+            "value": "[variables('osImageOffer')]"
+          },
+          "osImageSKU" : {
+            "value": "[variables('osImageSKU')]"
+          },
+          "osImageVersion" : {
+            "value": "[variables('osImageVersion')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "createJumpbox",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountNamePrefix'), '0')]",
+        "[variables('vnetID')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('customScriptLocation'), 'jumpbox-', parameters('jumpboxCount'), '.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "newStorageAccountName": {
+            "value": "[concat(parameters('newStorageAccountNamePrefix'), '0')]"
+          },
+          "adminUsername": {
+            "value": "[variables('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "dnsNameForJumpboxPublicIP": {
+            "value": "[parameters('dnsNameForJumpboxPublicIP')]"
+          },
+          "jumpboxVMSize": {
+            "value": "[parameters('jumpboxVMSize')]"
+          },
+          "subnetPrefix": {
+            "value": "[variables('subnetPrefix')]"
+          },
+          "subnetRef": {
+            "value": "[variables('subnetRef')]"
+          },
+          "jumpboxAddr": {
+            "value": "[variables('jumpboxAddr')]"
+          },
+          "jumpboxVMNamePrefix": {
+            "value": "[variables('jumpboxVMNamePrefix')]"
+          },
+          "osImagePublisher": {
+            "value": "[variables('osImagePublisher')]"
+          },
+          "osImageOffer": {
+            "value": "[variables('osImageOffer')]"
+          },
+          "osImageSKU" : {
+            "value": "[variables('osImageSKU')]"
+          },
+          "osImageVersion" : {
+            "value": "[variables('osImageVersion')]"
+          }
         }
       }
     }
