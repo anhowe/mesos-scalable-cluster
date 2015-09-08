@@ -133,19 +133,19 @@
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('jumpboxVMSize')]"
+          "vmSize": "Standard_D2"
         },
         "osProfile": {
-          "computername": "[variables('vmName')]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "computername": "jumpbox1",
+          "adminUsername": "azureuser",
+          "adminPassword": "Docker4Me$"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[parameters('osImagePublisher')]",
-            "offer": "[parameters('osImageOffer')]",
-            "sku": "[parameters('osImageSKU')]",
-            "version": "[parameters('osImageVersion')]"
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "14.04.3-LTS",
+            "version": "latest"
           },
           "osDisk": {
             "name": "[concat(variables('vmName'),'-osdisk')]",
