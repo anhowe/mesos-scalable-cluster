@@ -164,6 +164,23 @@
           ]
         }
       }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmName'), '/configurejumpbox')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "commandToExecute": "/bin/bash -c 'wget --tries 20 --retry-connrefused --waitretry=15 -qO- https://raw.githubusercontent.com/anhowe/ubuntu-devbox/master/configure-ubuntu.sh | nohup /bin/bash > /var/log/azure/firstinstall.log 2>&1 &'"
+        }
+      }
     }
   ]
 }
