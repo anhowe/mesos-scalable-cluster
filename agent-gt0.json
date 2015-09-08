@@ -196,6 +196,28 @@
           ]
         }
       }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('agentVMNamePrefix'), copyIndex(1), '/configureagent')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoopNode",
+        "count": "[parameters('agentCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('agentVMNamePrefix'), copyIndex(1))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [],
+          "commandToExecute": "[concat(variables('commandPrefix'), parameters('masterCount'), ' slaveconfiguration ', parameters('masterVMNamePrefix'), variables('commandPostfix'))]"
+        }
+      }
     }
   ]
 }
