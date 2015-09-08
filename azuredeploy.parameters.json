@@ -23,10 +23,10 @@
   "masterConfiguration": {
     "value": "masters-are-agents"
   },
-  "agentVMsize" : {
+  "agentVMSize" : {
     "value": "Standard_D1"
   },
-  "masterVMsize" : {
+  "masterVMSize" : {
     "value": "Standard_D1"
   },
   "jumpboxVMSize": {

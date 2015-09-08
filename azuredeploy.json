@@ -64,7 +64,7 @@
         "masters-are-not-agents"
       ]
     },
-    "agentVMsize": {
+    "agentVMSize": {
       "type": "string",
       "defaultValue": "Standard_D1",
       "allowedValues": [
@@ -81,7 +81,7 @@
         "description": "The size of the Virtual Machine."
       }
     },
-    "masterVMsize": {
+    "masterVMSize": {
       "type": "string",
       "defaultValue": "Standard_D1",
       "allowedValues": [

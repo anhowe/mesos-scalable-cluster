@@ -165,7 +165,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySet'))]"
         },
         "hardwareProfile": {
-          "vmSize": "[parameters('agentVMsize')]"
+          "vmSize": "[parameters('agentVMSize')]"
         },
         "osProfile": {
           "computername": "[concat(parameters('agentVMNamePrefix'), copyIndex(1))]",
