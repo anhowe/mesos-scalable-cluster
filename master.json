@@ -297,6 +297,28 @@
           ]
         }
       }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('masterVMNamePrefix'), copyIndex(1), '/configuremaster')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoopNode",
+        "count": "[parameters('masterCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('masterVMNamePrefix'), copyIndex(1))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [],
+          "commandToExecute": "[concat(\"/bin/bash -c 'wget --tries 20 --retry-connrefused --waitretry=15 -qO- https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/configure-mesos-cluster.sh | nohup /bin/bash -s \", parameters('masterCount'), ' ', parameters('masterConfiguration'), ' ', parameters('masterVMNamePrefix'), \" > /var/log/azure/firstinstall.log 2>&1 &'\")]"
+        }
+      }
     }
   ]
 }

@@ -16,12 +16,14 @@
 
 MASTERCOUNT=$1
 MASTERMODE=$2
+MASTERPREFIX=$3
 VMNAME=`hostname`
 VMNUMBER=`echo $VMNAME | sed 's/.*[^0-9]\([0-9]\+\)*$/\1/'`
 VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
 
 echo "Master Count: $MASTERCOUNT"
 echo "Master Mode: $MASTERMODE"
+echo "Master Prefix: $MASTERPREFIX"
 echo "vmname: $VMNAME"
 echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
 
@@ -31,7 +33,7 @@ echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
 
 ismaster ()
 {
-  if [ "$VMNUMBER" -le "$MASTERCOUNT" ]
+  if [ "$MASTERPREFIX" == "$VMPREFIX" ]
   then
     return 0
   else
@@ -69,7 +71,7 @@ zkconfig()
     then
       zkconfigstr="${zkconfigstr},"
     fi
-    zkconfigstr="${zkconfigstr}${VMPREFIX}${i}:2181"
+    zkconfigstr="${zkconfigstr}${MASTERPREFIX}${i}:2181"
   done
   zkconfigstr="${zkconfigstr}/${postfix}"
   echo $zkconfigstr
@@ -83,11 +85,11 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
 DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
 CODENAME=$(lsb_release -cs)
 echo "deb http://repos.mesosphere.io/${DISTRO} ${CODENAME} main" | sudo tee /etc/apt/sources.list.d/mesosphere.list
-sudo apt-get -y update
+time sudo apt-get -y update
 if ismaster ; then
-  sudo apt-get -y --force-yes install mesosphere
+  time sudo apt-get -y --force-yes install mesosphere
 else
-  sudo apt-get -y --force-yes install mesos
+  time sudo apt-get -y --force-yes install mesos
 fi
 
 #########################
@@ -101,7 +103,7 @@ if ismaster ; then
   echo $VMNUMBER | sudo tee /etc/zookeeper/conf/myid
   for i in `seq 1 $MASTERCOUNT` ;
   do
-    echo "server.${i}=${VMPREFIX}${i}:2888:3888" | sudo tee -a /etc/zookeeper/conf/zoo.cfg
+    echo "server.${i}=${MASTERPREFIX}${i}:2888:3888" | sudo tee -a /etc/zookeeper/conf/zoo.cfg
   done
 fi
 
