@@ -5,8 +5,11 @@ This Azure template creates an Apache Mesos cluster with Marathon, and Swarm on 
 </a>
 
 Once your cluster has been created you will have a resource group containing 3 parts:
+
 1. a set of 1,3,5 masters in a master specific availability set.  Each master's SSH can be accessed via the public dns address at ports 2211..2215
+
 2. a set of agents behind in an agent specific availability set.  The agent VMs must be accessed through the master, or jumpbox
+
 3. if chosen, a jumpbox.  The jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop.
 
 ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos.png)
