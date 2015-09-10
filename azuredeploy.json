@@ -52,12 +52,13 @@
         "description": "The number of mesos masters for the cluster."
       }
     },
-    "jumpboxCount": {
-      "type": "int",
-      "defaultValue": 0,
+    "jumpboxConfiguration": {
+      "type": "string",
+      "defaultValue": "none",
       "allowedValues": [
-        0,
-        1
+        "none",
+        "linux",
+        "windows"
       ],
       "metadata": {
         "description": "Choose to have a jumpbox for debugging on the private subnet."
@@ -363,7 +364,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('customScriptLocation'), 'jumpbox-', parameters('jumpboxCount'), '.json')]",
+          "uri": "[concat(variables('customScriptLocation'), 'jumpbox-', parameters('jumpboxConfiguration'), '.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -393,18 +394,6 @@
           },
           "jumpboxVMNamePrefix": {
             "value": "[variables('jumpboxVMNamePrefix')]"
-          },
-          "osImagePublisher": {
-            "value": "[variables('osImagePublisher')]"
-          },
-          "osImageOffer": {
-            "value": "[variables('osImageOffer')]"
-          },
-          "osImageSKU" : {
-            "value": "[variables('osImageSKU')]"
-          },
-          "osImageVersion" : {
-            "value": "[variables('osImageVersion')]"
           },
           "customScriptLocation": {
             "value": "[variables('customScriptLocation')]"

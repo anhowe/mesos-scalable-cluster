@@ -56,30 +56,6 @@
         "description": "The vm name prefix that identifies the jumpbox."
       }
     },
-    "osImagePublisher": {
-      "type": "string",
-      "metadata": {
-        "description": "The publisher name to identify the OS image."
-      }
-    },
-    "osImageOffer": {
-      "type": "string",
-      "metadata": {
-        "description": "The offer name to identify the OS image."
-      }
-    },
-    "osImageSKU": {
-      "type": "string",
-      "metadata": {
-        "description": "The sku to identify the OS image."
-      }
-    },
-    "osImageVersion": {
-      "type": "string",
-      "metadata": {
-        "description": "The version to identify the OS image."
-      }
-    },
     "customScriptLocation": {
       "type": "string",
       "metadata": {
@@ -89,6 +65,10 @@
   },
   "variables": {
     "vmName": "[concat(parameters('jumpboxVMNamePrefix'), '1')]",
+    "osImagePublisher": "MicrosoftVisualStudio",
+    "osImageOffer": "VisualStudio",
+    "osImageSKU": "VS-2015-Community-AzureSDK-2.7-W10T-Win10-N",
+    "osImageVersion": "latest",
     "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-ubuntu.sh | nohup /bin/bash -s ')]",
     "wgetCommandPostfix":  " > /var/log/azure/firstinstall.log 2>&1 &'",
     "commandPrefix": "/bin/bash -c '"
@@ -171,23 +151,6 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmName'), '-nic'))]"
             }
           ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'), '/configurejumpbox')]",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.OSTCExtensions",
-        "type": "CustomScriptForLinux",
-        "typeHandlerVersion": "1.2",
-        "settings": {
-          "commandToExecute": "[concat(variables('commandPrefix'), variables('wgetCommandPrefix'), parameters('adminUsername'), variables('wgetCommandPostfix'))]"
         }
       }
     }

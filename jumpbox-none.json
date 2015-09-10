@@ -56,30 +56,6 @@
         "description": "The vm name prefix that identifies the jumpbox."
       }
     },
-    "osImagePublisher": {
-      "type": "string",
-      "metadata": {
-        "description": "The publisher name to identify the OS image."
-      }
-    },
-    "osImageOffer": {
-      "type": "string",
-      "metadata": {
-        "description": "The offer name to identify the OS image."
-      }
-    },
-    "osImageSKU": {
-      "type": "string",
-      "metadata": {
-        "description": "The sku to identify the OS image."
-      }
-    },
-    "osImageVersion": {
-      "type": "string",
-      "metadata": {
-        "description": "The version to identify the OS image."
-      }
-    },
     "customScriptLocation": {
       "type": "string",
       "metadata": {
