@@ -89,9 +89,9 @@
   },
   "variables": {
     "vmName": "[concat(parameters('jumpboxVMNamePrefix'), '1')]",
-    "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-ubuntu.sh | nohup /bin/bash -s ",
+    "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-ubuntu.sh | nohup /bin/bash -s ')]",
     "wgetCommandPostfix":  " > /var/log/azure/firstinstall.log 2>&1 &'",
-    "commandPostfix":  " > /var/log/azure/firstinstall.log 2>&1 &'"
+    "commandPrefix": "/bin/bash -c '"
   },
   "resources": [
     {
