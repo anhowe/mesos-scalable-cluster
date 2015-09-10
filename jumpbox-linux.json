@@ -131,10 +131,10 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[parameters('osImagePublisher')]",
-            "offer": "[parameters('osImageOffer')]",
-            "sku": "[parameters('osImageSKU')]",
-            "version": "[parameters('osImageVersion')]"
+            "publisher": "[variables('osImagePublisher')]",
+            "offer": "[variables('osImageOffer')]",
+            "sku": "[variables('osImageSKU')]",
+            "version": "[variables('osImageVersion')]"
           },
           "osDisk": {
             "name": "[concat(variables('vmName'),'-osdisk')]",
