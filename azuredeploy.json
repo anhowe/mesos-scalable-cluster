@@ -8,6 +8,13 @@
         "description": "Unique DNS Name Prefix for the Storage Account where the Virtual Machine's disks will be placed.  StorageAccounts may contain at most variables('vmsPerStorageAccount')"
       }
     },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "azureuser",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
@@ -30,7 +37,7 @@
       "type": "int",
       "defaultValue": 0,
       "metadata": {
-        "description": "The number of mesos masters for the cluster."
+        "description": "The number of mesos agents for the cluster."
       }
     },
     "masterCount": {
@@ -53,7 +60,7 @@
         1
       ],
       "metadata": {
-        "description": "The number of mesos masters for the cluster."
+        "description": "Choose to have a jumpbox for debugging on the private subnet."
       }
     },
     "masterConfiguration": {
@@ -62,7 +69,10 @@
       "allowedValues": [
         "masters-are-agents",
         "masters-are-not-agents"
-      ]
+      ],
+      "metadata": {
+        "description": "Specify whether masters should act as agents or not."
+      }
     },
     "agentVMSize": {
       "type": "string",
@@ -123,7 +133,6 @@
     }
   },
   "variables": {
-    "adminUsername": "azureuser",
     "masterVMNamePrefix": "[concat(parameters('clusterPrefix'),'master')]",
     "agentVMNamePrefix": "[concat(parameters('clusterPrefix'),'agent')]",
     "jumpboxVMNamePrefix": "[concat(parameters('clusterPrefix'),'jumpbox')]",
@@ -231,7 +240,7 @@
             "value": "[concat(parameters('newStorageAccountNamePrefix'), '0')]"
           },
           "adminUsername": {
-            "value": "[variables('adminUsername')]"
+            "value": "[parameters('adminUsername')]"
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
@@ -266,11 +275,14 @@
           "osImageOffer": {
             "value": "[variables('osImageOffer')]"
           },
-          "osImageSKU" : {
+          "osImageSKU": {
             "value": "[variables('osImageSKU')]"
           },
-          "osImageVersion" : {
+          "osImageVersion": {
             "value": "[variables('osImageVersion')]"
+          },
+          "customScriptLocation": {
+            "value": "[variables('customScriptLocation')]"
           }
         }
       }
@@ -293,7 +305,7 @@
             "value": "[concat(parameters('newStorageAccountNamePrefix'))]"
           },
           "adminUsername": {
-            "value": "[variables('adminUsername')]"
+            "value": "[parameters('adminUsername')]"
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
@@ -333,6 +345,9 @@
           },
           "osImageVersion" : {
             "value": "[variables('osImageVersion')]"
+          },
+          "customScriptLocation": {
+            "value": "[variables('customScriptLocation')]"
           }
         }
       }
@@ -356,7 +371,7 @@
             "value": "[concat(parameters('newStorageAccountNamePrefix'), '0')]"
           },
           "adminUsername": {
-            "value": "[variables('adminUsername')]"
+            "value": "[parameters('adminUsername')]"
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
@@ -390,6 +405,9 @@
           },
           "osImageVersion" : {
             "value": "[variables('osImageVersion')]"
+          },
+          "customScriptLocation": {
+            "value": "[variables('customScriptLocation')]"
           }
         }
       }

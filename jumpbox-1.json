@@ -79,10 +79,19 @@
       "metadata": {
         "description": "The version to identify the OS image."
       }
+    },
+    "customScriptLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The github location for the shell scripts."
+      }
     }
   },
   "variables": {
-    "vmName": "[concat(parameters('jumpboxVMNamePrefix'), '1')]"
+    "vmName": "[concat(parameters('jumpboxVMNamePrefix'), '1')]",
+    "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-ubuntu.sh | nohup /bin/bash -s ",
+    "wgetCommandPostfix":  " > /var/log/azure/firstinstall.log 2>&1 &'",
+    "commandPostfix":  " > /var/log/azure/firstinstall.log 2>&1 &'"
   },
   "resources": [
     {
@@ -178,7 +187,7 @@
         "type": "CustomScriptForLinux",
         "typeHandlerVersion": "1.2",
         "settings": {
-          "commandToExecute": "/bin/bash -c 'wget --tries 20 --retry-connrefused --waitretry=15 -qO- https://raw.githubusercontent.com/anhowe/ubuntu-devbox/master/configure-ubuntu.sh | nohup /bin/bash > /var/log/azure/firstinstall.log 2>&1 &'"
+          "commandToExecute": "[concat(variables('commandPrefix'), variables('wgetCommandPrefix'), parameters('adminUsername'), variables('wgetCommandPostfix'))]"
         }
       }
     }
