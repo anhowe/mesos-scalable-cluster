@@ -70,8 +70,8 @@ This walk through is based the wonderful digital ocean tutorial: https://www.dig
 
 7. you will notice the new app change state from not running to running
 
-![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp-status.png)
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp-status.png)
 
 8. browse back to mesos http://c1master1:5050.  You will notice the running tasks and the completed tasks.  Click on the host of the completed tasks and also look at the sandbox.
 
-![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
