@@ -1,3 +1,5 @@
+# Mesos cluster with Marathon and Swarm
+
 This Azure template creates an Apache Mesos cluster with Marathon, and Swarm on a configurable number of machines
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fanhowe%2Fmesos-scalable-cluster%2Fmaster%2Fazuredeploy.json" target="_blank">
@@ -18,19 +20,37 @@ The following image is an example of a cluster with 1 jumpbox, 3 masters, and 3 
 
 You can see Mesos on port 5050, Marathon on port 8080, and Swarm on port 2375.  All VMs are on the same private subnet, 10.0.0.0/24, and fully accessible to each other.
 
-Below are the parameters that the template expects:
+# Cluster Walkthrough
 
-| Name   | Description    |
-|:--- |:---|
-| newStorageAccountNamePrefix  | Name for the Storage Account(s) where the Virtual Machine's disks will be placed.  If the storage account does not aleady exist in this Resource Group it will be created. |
-| adminPassword  | Password for the Virtual Machines  |
-| dnsNameForContainerServicePublicIP  | Unique DNS Name for the Public IP used to access the master Virtual Machines. |
-| dnsNameForJumpboxPublicIP  | Unique DNS Name for the Public IP used to access the jumpbox. |
-| agentCount | the number of agent VMs |
-| masterCount | the number of master VMs |
-| jumpboxCount | the number of jumpbox VMs |
-| masterConfiguration | specify "masters-are-agents" to have the master nodes act as agents and specify "masters-are-not-agents" to ensure the master nodes are not running as agents |
-| agentVMSize | the size of the agent VMs |
-| masterVMSize | the size of the master VMs |
-| jumpboxVMSize | the size of the jumpbox VMs |
-| clusterPrefix | a two character prefix to identify the cluster |
+This walk through is based the wonderful digital ocean tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-a-production-ready-mesosphere-cluster-on-ubuntu-14-04
+
+1. Get your endpoints to cluster
+ 1. browse to https://portal.azure.com,
+ 1. then click browse all, followed by "resource groups", your resource group, then expand your resources, and copy the dns names of your jumpbox (if chosen), and your NAT public ip addresses.
+
+2. Connect to your cluster
+ 1. linux jumpbox - start a VNC to the jumpbox using instructions https://github.com/anhowe/ubuntu-devbox.  The jumpbox takes an hour to configure.  If the desktop is not ready, you can tail /var/log/azure/firstinstall.log to watach installation.
+ 2. windows jumpbox - remote desktop to the windows jumpbox
+ 3. no jumpbox - SSH to port 2211 on your NAT creating a tunnel to port 5050 and port 8080.  Then use the browser of your desktop to browse these ports.
+
+3. browse to the Mesos UI http://c1master1:5050
+ 1. linux jumpbox - in top right corner choose Applications->Internet->Chrome and browse to http://c1master1:5050
+ 2. windows jumpbox - open browser and browse to http://c1master1:5050
+ 3. no jumpbox - browse to http://localhost:5050
+
+4. Browse mesos:
+ 1. scroll down the page and notice your resources of CPU and memory.  These are your agents
+ 2. On top of page, click frameworks and notice your Marathon and Swarm frameworks
+ 3. On top of page, click agents and you can see your agents.  On windows or linux jumpbox you can also drill down into the slave and see its logs.
+
+5. browse and explore Marathon UI http://c1master1:8080 (or if using tunnel http://localhost:8080 )
+
+6. start a long running job in Marathon
+ 1. click "+New App"
+ 2. type "myfirstapp" for the id
+ 3. type "/bin/bash "for i in {1..5}; do echo MyFirstApp $i; sleep 1; done" for the command
+ 4. scroll to bottom and click create
+
+7. you will notice the new app change state from not running to running
+
+8. browse back to mesos http://c1master1:5050.  You will notice the running tasks and the completed tasks.  Click on the host of the completed tasks and also look at the sandbox.
