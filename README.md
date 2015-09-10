@@ -25,8 +25,15 @@ You can see Mesos on port 5050, Marathon on port 8080, and Swarm on port 2375.  
 This walk through is based the wonderful digital ocean tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-a-production-ready-mesosphere-cluster-on-ubuntu-14-04
 
 1. Get your endpoints to cluster
- 1. browse to https://portal.azure.com,
- 1. then click browse all, followed by "resource groups", your resource group, then expand your resources, and copy the dns names of your jumpbox (if chosen), and your NAT public ip addresses.
+ 1. browse to https://portal.azure.com
+
+ 2. then click browse all, followed by "resource groups", and choose your resource group
+
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-resourcegroups.png)
+
+ 3. then expand your resources, and copy the dns names of your jumpbox (if chosen), and your NAT public ip addresses.
+
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-publicipaddresses.png)
 
 2. Connect to your cluster
  1. linux jumpbox - start a VNC to the jumpbox using instructions https://github.com/anhowe/ubuntu-devbox.  The jumpbox takes an hour to configure.  If the desktop is not ready, you can tail /var/log/azure/firstinstall.log to watach installation.
@@ -40,8 +47,16 @@ This walk through is based the wonderful digital ocean tutorial: https://www.dig
 
 4. Browse mesos:
  1. scroll down the page and notice your resources of CPU and memory.  These are your agents
+
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-webui.png)
+
  2. On top of page, click frameworks and notice your Marathon and Swarm frameworks
+
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-frameworks.png)
+
  3. On top of page, click agents and you can see your agents.  On windows or linux jumpbox you can also drill down into the slave and see its logs.
+
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-agents.png)
 
 5. browse and explore Marathon UI http://c1master1:8080 (or if using tunnel http://localhost:8080 )
 
@@ -51,6 +66,12 @@ This walk through is based the wonderful digital ocean tutorial: https://www.dig
  3. type "/bin/bash "for i in {1..5}; do echo MyFirstApp $i; sleep 1; done" for the command
  4. scroll to bottom and click create
 
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp.png)
+
 7. you will notice the new app change state from not running to running
 
+![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp-status.png)
+
 8. browse back to mesos http://c1master1:5050.  You will notice the running tasks and the completed tasks.  Click on the host of the completed tasks and also look at the sandbox.
+
+![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
