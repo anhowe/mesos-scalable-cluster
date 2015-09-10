@@ -77,14 +77,18 @@ This walk through is based the wonderful digital ocean tutorial: https://www.dig
  ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
 
 # Questions
-Q. Why is there a jumpbox?
-A. The jumpbox is used for easy troubleshooting on the private subnet.  The Mesos Web UI requires access to all machines.  Also the web UI.  You could also consider using OpenVPN to access the private subnet.
+**Q.** Why is there a jumpbox?
 
-Q. My cluster just completed but mesos is not up.
-A. After your template finishes, your cluster is still running installation.  You can run "tail -f /var/log/azure/firstinstall.log" to verify the status has completed.
+**A.** The jumpbox is used for easy troubleshooting on the private subnet.  The Mesos Web UI requires access to all machines.  Also the web UI.  You could also consider using OpenVPN to access the private subnet.
 
-Q. I'm having errors with this template, who can I contact.
-A. please contact anhowe@microsoft.com for errors only with this template.
+**Q.** My cluster just completed but mesos is not up.
 
-Q. I wish this template can do X.
-A. please contact anhowe@microsoft.com for new feature requests for this template.
+**A.** After your template finishes, your cluster is still running installation.  You can run "tail -f /var/log/azure/firstinstall.log" to verify the status has completed.
+
+**Q.** I'm having errors with this template, who can I contact.
+
+**A.** please contact anhowe@microsoft.com for errors only with this template.
+
+**Q.** I wish this template can do X.
+
+**A.** please contact anhowe@microsoft.com for new feature requests for this template.
