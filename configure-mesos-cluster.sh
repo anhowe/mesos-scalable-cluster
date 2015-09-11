@@ -129,6 +129,8 @@ fi
 # Configure Mesos Agent
 #########################
 if isagent ; then
+  # Add docker containerizer
+  echo "docker,mesos" | sudo tee /etc/mesos-slave/containerizers
   hostname -i | sudo tee /etc/mesos-slave/ip
   hostname | sudo tee /etc/mesos-slave/hostname
 fi
@@ -177,7 +179,7 @@ if ismaster ; then
       -p 2376:2375 -p 3375:3375 swarm manage \
       -c mesos-experimental \
       --cluster-opt mesos.address=0.0.0.0 \
-      --cluster-opt mesos.port=3375 $VMNAME:5050
+      --cluster-opt mesos.port=3375 $zkmesosconfig
 fi
 
 echo "Finished installing and configuring docker and swarm"
