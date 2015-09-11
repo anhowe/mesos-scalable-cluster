@@ -133,32 +133,6 @@ if isagent ; then
   hostname | sudo tee /etc/mesos-slave/hostname
 fi
 
-################
-# Install Docker
-################
-
-echo "Installing and configuring docker and swarm"
-
-time wget -qO- https://get.docker.com | sh
-
-if isagent ; then
-  # Start Docker and listen on :2375 (no auth, but in vnet)
-  echo 'DOCKER_OPTS="-H unix:// -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
-  sudo service docker restart
-fi
-
-# Run swarm manager container on port 2376 (no auth)
-if ismaster ; then
-  time sudo docker run -d -e SWARM_MESOS_USER=root \
-      --restart=always \
-      -p 2376:2375 -p 3375:3375 swarm manage \
-      -c mesos-experimental \
-      --cluster-opt mesos.address=0.0.0.0 \
-      --cluster-opt mesos.port=3375 $masterVMName:5050
-fi
-
-echo "Finished installing and configuring docker and swarm"
-
 ##############################################
 # configure init rules restart all processes
 ##############################################
@@ -181,5 +155,31 @@ else
   echo manual | sudo tee /etc/init/mesos-slave.override
   sudo stop mesos-slave
 fi
+
+################
+# Install Docker
+################
+
+echo "Installing and configuring docker and swarm"
+
+time wget -qO- https://get.docker.com | sh
+
+if isagent ; then
+  # Start Docker and listen on :2375 (no auth, but in vnet)
+  echo 'DOCKER_OPTS="-H unix:// -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
+  sudo service docker restart
+fi
+
+# Run swarm manager container on port 2376 (no auth)
+if ismaster ; then
+  time sudo docker run -d -e SWARM_MESOS_USER=root \
+      --restart=always \
+      -p 2376:2375 -p 3375:3375 swarm manage \
+      -c mesos-experimental \
+      --cluster-opt mesos.address=0.0.0.0 \
+      --cluster-opt mesos.port=3375 $VMNAME:5050
+fi
+
+echo "Finished installing and configuring docker and swarm"
 
 echo "completed mesos cluster configuration"
