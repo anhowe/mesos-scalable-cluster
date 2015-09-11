@@ -159,8 +159,7 @@
       "agent-0.json",
       "agent-gt0.json"
     ],
-    "agentFile": "[variables('agentFiles')[mod(add(parameters('agentCount'),2),add(parameters('agentCount'),1))]]",
-    "validateNoMoreThan50Agents": "[div(1,div(51,add(parameters('agentCount'),1)))]"
+    "agentFile": "[variables('agentFiles')[mod(add(parameters('agentCount'),2),add(parameters('agentCount'),1))]]"
   },
   "resources": [
     {

@@ -67,7 +67,7 @@
     "vmName": "[concat(parameters('jumpboxVMNamePrefix'), '1')]",
     "osImagePublisher": "MicrosoftVisualStudio",
     "osImageOffer": "VisualStudio",
-    "osImageSKU": "VS-2015-Community-AzureSDK-2.7-Cordova-Win8.1-N-x64",
+    "osImageSKU": "VS-2015-Enterprise-AzureSDK-2.7-WS2012R2",
     "osImageVersion": "latest"
   },
   "resources": [
