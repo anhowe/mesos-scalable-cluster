@@ -85,6 +85,26 @@ This walk through is based the wonderful digital ocean tutorial: https://www.dig
 
  ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
 
+# Swarm Walkthrough
+
+1. from the jumpbox browse to http://c1master1:5050/#/frameworks, and verify swarm is working:
+
+![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/swarm-framework.png)
+
+2. SSH to the master from the jumpbox or hitting port 2211 on the public IP
+
+3. Run "sudo docker ps" and observe that swarm is working
+
+4. Run "sudo docker -H tcp://0.0.0.0:2376 ps" and see there are no jobs
+
+5. Run "sudo docker -H tcp://0.0.0.0:2376 run hello-world" and notice the error about resource contraints.  Now add the constraints by running "sudo docker -H tcp://0.0.0.0:2376 run -m 256m hello-world" and watch it run.
+
+6. Run "sudo docker -H tcp://0.0.0.0:2376 ps -a" and see the hello-world that has just run
+
+7. Browse to http://c1master1:5050/, and see the "hello-world" process that has just completed.  Browse to Log:
+
+![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/docker-hello-world.png)
+
 # Questions
 **Q.** Why is there a jumpbox?
 
