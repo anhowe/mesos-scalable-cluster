@@ -216,18 +216,20 @@ sudo service docker restart
 
 # Run swarm manager container on port 2376 (no auth)
 if ismaster ; then
+  echo "starting docker swarm"
   echo time sudo docker run -d -e SWARM_MESOS_USER=root \
       --restart=always \
       -p 2376:2375 -p 3375:3375 swarm manage \
       -c mesos-experimental \
       --cluster-opt mesos.address=0.0.0.0 \
-      --cluster-opt mesos.port=3375 $zkmesosconfig
+      --cluster-opt mesos.port=3375 $VMNAME:5050
   time sudo docker run -d -e SWARM_MESOS_USER=root \
       --restart=always \
       -p 2376:2375 -p 3375:3375 swarm manage \
       -c mesos-experimental \
       --cluster-opt mesos.address=0.0.0.0 \
-      --cluster-opt mesos.port=3375 $zkmesosconfig
+      --cluster-opt mesos.port=3375 $VMNAME:5050
+  echo "completed starting docker swarm"
 fi
 
 echo "Finished installing and configuring docker and swarm"
