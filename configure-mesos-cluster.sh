@@ -11,6 +11,7 @@
 ###########################################################
 
 echo "starting mesos cluster configuration"
+ps ax
 
 #############
 # Parameters
@@ -70,6 +71,8 @@ ensureAzureNetwork()
   if [ $networkHealthy -ne 0 ]
   then
     echo "the network is not healthy, aborting install"
+    ifconfig
+    ip a
     exit 2
   fi
 }
@@ -202,6 +205,9 @@ else
   sudo stop mesos-slave
 fi
 
+echo "processes after restarting mesos"
+ps ax
+
 ################
 # Install Docker
 ################
@@ -231,7 +237,8 @@ if ismaster ; then
       --cluster-opt mesos.port=3375 $VMNAME:5050
   echo "completed starting docker swarm"
 fi
-
+echo "processes at end of script"
+ps ax
 echo "Finished installing and configuring docker and swarm"
 
 echo "completed mesos cluster configuration"
