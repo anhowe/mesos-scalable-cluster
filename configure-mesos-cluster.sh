@@ -124,6 +124,41 @@ zkconfig()
   echo $zkconfigstr
 }
 
+################
+# Install Docker
+################
+
+echo "Installing and configuring docker and swarm"
+
+time wget -qO- https://get.docker.com | sh
+
+# Start Docker and listen on :2375 (no auth, but in vnet)
+echo 'DOCKER_OPTS="-H unix:///var/run/docker.sock -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
+sudo service docker restart
+
+ensureDocker()
+{
+  # ensure that docker is healthy
+  dockerHealthy=1
+  for i in {1..3}; do
+    sudo docker run hello-world
+    if [ $? -eq 0 ]
+    then
+      # hostname has been found continue
+      dockerHealthy=0
+      echo "Docker is healthy and will run hello-world"
+      sudo docker ps -a
+      break
+    fi
+    sleep 10
+  done
+  if [ $dockerHealthy -ne 0 ]
+  then
+    echo "Docker is not healthy and will not run hello-world"
+  fi
+}
+ensureDocker
+
 ##################
 # Install Mesos
 ##################
@@ -208,33 +243,24 @@ fi
 echo "processes after restarting mesos"
 ps ax
 
-################
-# Install Docker
-################
-
-echo "Installing and configuring docker and swarm"
-
-time wget -qO- https://get.docker.com | sh
-
-# Start Docker and listen on :2375 (no auth, but in vnet)
-echo 'DOCKER_OPTS="-H unix:// -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
-sudo service docker restart
-
 # Run swarm manager container on port 2376 (no auth)
 if ismaster ; then
   echo "starting docker swarm"
-  echo time sudo docker run -d -e SWARM_MESOS_USER=root \
+  echo "sleep to give master time to come up"
+  sleep 10
+  echo sudo docker run -d -e SWARM_MESOS_USER=root \
       --restart=always \
       -p 2376:2375 -p 3375:3375 swarm manage \
       -c mesos-experimental \
       --cluster-opt mesos.address=0.0.0.0 \
-      --cluster-opt mesos.port=3375 $VMNAME:5050
-  time sudo docker run -d -e SWARM_MESOS_USER=root \
+      --cluster-opt mesos.port=3375 $zkmesosconfig
+  sudo docker run -d -e SWARM_MESOS_USER=root \
       --restart=always \
       -p 2376:2375 -p 3375:3375 swarm manage \
       -c mesos-experimental \
       --cluster-opt mesos.address=0.0.0.0 \
-      --cluster-opt mesos.port=3375 $VMNAME:5050
+      --cluster-opt mesos.port=3375 $zkmesosconfig
+  sudo docker ps
   echo "completed starting docker swarm"
 fi
 echo "processes at end of script"
