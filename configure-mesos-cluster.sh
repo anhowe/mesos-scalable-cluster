@@ -33,6 +33,48 @@ echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
 # Common Functions
 ###################
 
+ensureAzureNetwork()
+{
+  # ensure the host name is resolvable
+  hostResolveHealthy=1
+  for i in {1..120}; do
+    host $VMNAME
+    if [ $? -eq 0 ]
+    then
+      # hostname has been found continue
+      hostResolveHealthy=0
+      echo "the host name resolves"
+      break
+    fi
+    sleep 1
+  done
+  if [ $hostResolveHealthy -ne 0 ]
+  then
+    echo "host name does not resolve, aborting install"
+    exit 1
+  fi
+
+  # ensure the network works
+  networkHealthy=1
+  for i in {1..12}; do
+    wget -O/dev/null http://bing.com
+    if [ $? -eq 0 ]
+    then
+      # hostname has been found continue
+      networkHealthy=0
+      echo "the network is healthy"
+      break
+    fi
+    sleep 10
+  done
+  if [ $networkHealthy -ne 0 ]
+  then
+    echo "the network is not healthy, aborting install"
+    exit 2
+  fi
+}
+ensureAzureNetwork
+
 ismaster ()
 {
   if [ "$MASTERPREFIX" == "$VMPREFIX" ]
@@ -148,11 +190,13 @@ else
   echo manual | sudo tee /etc/init/zookeeper.override
   sudo stop zookeeper
   echo manual | sudo tee /etc/init/mesos-master.override
-  sudo-stop mesos-master
+  sudo stop mesos-master
 fi
 
 if isagent ; then
+  echo "starting mesos-slave"
   sudo start mesos-slave
+  echo "completed starting mesos-slave with code $?"
 else
   echo manual | sudo tee /etc/init/mesos-slave.override
   sudo stop mesos-slave
@@ -166,14 +210,18 @@ echo "Installing and configuring docker and swarm"
 
 time wget -qO- https://get.docker.com | sh
 
-if isagent ; then
-  # Start Docker and listen on :2375 (no auth, but in vnet)
-  echo 'DOCKER_OPTS="-H unix:// -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
-  sudo service docker restart
-fi
+# Start Docker and listen on :2375 (no auth, but in vnet)
+echo 'DOCKER_OPTS="-H unix:// -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
+sudo service docker restart
 
 # Run swarm manager container on port 2376 (no auth)
 if ismaster ; then
+  echo time sudo docker run -d -e SWARM_MESOS_USER=root \
+      --restart=always \
+      -p 2376:2375 -p 3375:3375 swarm manage \
+      -c mesos-experimental \
+      --cluster-opt mesos.address=0.0.0.0 \
+      --cluster-opt mesos.port=3375 $zkmesosconfig
   time sudo docker run -d -e SWARM_MESOS_USER=root \
       --restart=always \
       -p 2376:2375 -p 3375:3375 swarm manage \
