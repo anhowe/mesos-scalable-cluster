@@ -12,13 +12,22 @@ Once your cluster has been created you will have a resource group containing 3 p
 
 2. a set of agents behind in an agent specific availability set.  The agent VMs must be accessed through the master, or jumpbox
 
-3. if chosen, a jumpbox.  The jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop.
+3. if chosen, a jumpbox
 
 The following image is an example of a cluster with 1 jumpbox, 3 masters, and 3 agents:
 
 ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos.png)
 
 You can see Mesos on port 5050, Marathon on port 8080, and Swarm on port 2375.  All VMs are on the same private subnet, 10.0.0.0/24, and fully accessible to each other.
+
+# Installation Notes
+
+Here are notes for troubleshooting:
+ * the installation log for the linux jumpbox, masters, and agents are in /var/log/azure/firstinstall.log
+ * event though the VMs finish quickly mesos can take 5-15 minutes to install, check /var/log/azure/firstinstall.log for the completion status.
+ * the linux jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop via VNC and an SSH tunnel.
+ * the explorer browser in windows needs to be setup in compatibility mode, otherwise the mesos UI will not display.  After starting the browser go to settings, compatibility mode and ensure "Display intranet sites in compability mode" is unchecked
+ ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/windows-compatibility.png)
 
 # Cluster Walkthrough
 
