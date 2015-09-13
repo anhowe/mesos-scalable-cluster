@@ -108,19 +108,25 @@ if isagent ; then
   echo "this node is an agent"
 fi
 
-zkconfig()
+zkhosts()
 {
-  postfix="$1"
-  zkconfigstr="zk://"
+  zkhosts=""
   for i in `seq 1 $MASTERCOUNT` ;
   do
     if [ "$i" -gt "1" ]
     then
-      zkconfigstr="${zkconfigstr},"
+      zkhosts="${zkhosts},"
     fi
-    zkconfigstr="${zkconfigstr}${MASTERPREFIX}${i}:2181"
+    zkhosts="${zkhosts}${MASTERPREFIX}${i}:2181"
   done
-  zkconfigstr="${zkconfigstr}/${postfix}"
+  echo $zkhosts
+}
+
+zkconfig()
+{
+  postfix="$1"
+  zkhosts=$(zkhosts)
+  zkconfigstr="zk://${zkhosts}/${postfix}"
   echo $zkconfigstr
 }
 
@@ -197,11 +203,18 @@ if ismaster ; then
   echo $quorum | sudo tee /etc/mesos-master/quorum
   hostname -i | sudo tee /etc/mesos-master/ip
   hostname | sudo tee /etc/mesos-master/hostname
+  # setup marathon
   sudo mkdir -p /etc/marathon/conf
   sudo cp /etc/mesos-master/hostname /etc/marathon/conf
   sudo cp /etc/mesos/zk /etc/marathon/conf/master
   zkmarathonconfig=$(zkconfig "marathon")
   echo $zkmarathonconfig | sudo tee /etc/marathon/conf/zk
+  # setup chronos
+  sudo cp /etc/marathon/conf/master /etc/chronos/conf
+  zkchronoshosts=$(zkhosts)
+  echo $zkchronoshosts | sudo tee /etc/chronos/conf/zk_hosts
+  echo "/chronos" | sudo tee /etc/chronos/conf/zk_path
+  sudo cp /etc/mesos-master/hostname /etc/chronos/conf
   echo 'Mesos Cluster on Microsoft Azure' | sudo tee /etc/mesos-master/cluster
 fi
 
@@ -224,6 +237,7 @@ if ismaster ; then
   sudo restart zookeeper
   sudo start mesos-master
   sudo start marathon
+  sudo start chronos
 else
   echo manual | sudo tee /etc/init/zookeeper.override
   sudo stop zookeeper
