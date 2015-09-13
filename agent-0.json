@@ -97,6 +97,27 @@
       "metadata": {
         "description": "The github location for the shell scripts."
       }
+    },
+    "swarmEnabled": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Flag for enabling the Docker Swarm framework."
+      }
+    },
+    "marathonEnabled": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Flag for enabling the Marathon framework."
+      }
+    },
+    "chronosEnabled": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Flag for enabling the Chronos framework."
+      }
     }
   },
   "variables": {},

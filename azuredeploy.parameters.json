@@ -1,18 +1,18 @@
 {
   "newStorageAccountNamePrefix": {
-    "value": "mesosscalable0909d"
+    "value": "mesosscalable0913a"
   },
   "adminUsername": {
     "value": "azureuser"
   },
   "adminPassword": {
-    "value": "Docker4Me$"
+    "value": "password1234$"
   },
   "dnsNameForContainerServicePublicIP": {
-    "value": "mesosscalable0909d"
+    "value": "mesosscalable0913a"
   },
   "dnsNameForJumpboxPublicIP": {
-    "value": "mesosscalablejb0909d"
+    "value": "mesosscalablejb0913a"
   },
   "agentCount": {
     "value": 1
@@ -37,5 +37,14 @@
   },
   "clusterPrefix": {
     "value": "c1"
+  },
+  "swarmEnabled": {
+    "value": "false"
+  },
+  "marathonEnabled": {
+    "value": "true"
+  },
+  "chronosEnabled": {
+    "value": "true"
   }
 }

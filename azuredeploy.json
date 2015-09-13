@@ -132,6 +132,27 @@
       "metadata": {
         "description": "The prefix to identify the cluster."
       }
+    },
+    "swarmEnabled": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Flag for enabling the Docker Swarm framework."
+      }
+    },
+    "marathonEnabled": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Flag for enabling the Marathon framework."
+      }
+    },
+    "chronosEnabled": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Flag for enabling the Chronos framework."
+      }
     }
   },
   "variables": {
@@ -298,6 +319,15 @@
           },
           "customScriptLocation": {
             "value": "[variables('customScriptLocation')]"
+          },
+          "swarmEnabled": {
+            "value": "[parameters('swarmEnabled')]"
+          },
+          "marathonEnabled": {
+            "value": "[parameters('marathonEnabled')]"
+          },
+          "chronosEnabled": {
+            "value": "[parameters('chronosEnabled')]"
           }
         }
       }
@@ -363,6 +393,15 @@
           },
           "customScriptLocation": {
             "value": "[variables('customScriptLocation')]"
+          },
+          "swarmEnabled": {
+            "value": "[parameters('swarmEnabled')]"
+          },
+          "marathonEnabled": {
+            "value": "[parameters('marathonEnabled')]"
+          },
+          "chronosEnabled": {
+            "value": "[parameters('chronosEnabled')]"
           }
         }
       }

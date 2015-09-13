@@ -20,6 +20,9 @@ ps ax
 MASTERCOUNT=$1
 MASTERMODE=$2
 MASTERPREFIX=$3
+SWARMENABLED=$4
+MARATHONENABLED=$5
+CHRONOSENABLED=$6
 VMNAME=`hostname`
 VMNUMBER=`echo $VMNAME | sed 's/.*[^0-9]\([0-9]\+\)*$/\1/'`
 VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
@@ -29,6 +32,7 @@ echo "Master Mode: $MASTERMODE"
 echo "Master Prefix: $MASTERPREFIX"
 echo "vmname: $VMNAME"
 echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
+echo "SWARMENABLED: $SWARMENABLED, MARATHONENABLED: $MARATHONENABLED, CHRONOSENABLED: $CHRONOSENABLED"
 
 ###################
 # Common Functions
@@ -195,21 +199,24 @@ if ismaster ; then
   done
 fi
 
-#########################
-# Configure Mesos Master
-#########################
+#########################################
+# Configure Mesos Master and Frameworks
+#########################################
 if ismaster ; then
   quorum=`expr $MASTERCOUNT / 2 + 1`
   echo $quorum | sudo tee /etc/mesos-master/quorum
   hostname -i | sudo tee /etc/mesos-master/ip
   hostname | sudo tee /etc/mesos-master/hostname
+  echo 'Mesos Cluster on Microsoft Azure' | sudo tee /etc/mesos-master/cluster
+fi
+
+if ismaster  && [ "$MARATHONENABLED" == "true" ] ; then
   # setup marathon
   sudo mkdir -p /etc/marathon/conf
   sudo cp /etc/mesos-master/hostname /etc/marathon/conf
   sudo cp /etc/mesos/zk /etc/marathon/conf/master
   zkmarathonconfig=$(zkconfig "marathon")
   echo $zkmarathonconfig | sudo tee /etc/marathon/conf/zk
-  echo 'Mesos Cluster on Microsoft Azure' | sudo tee /etc/mesos-master/cluster
 fi
 
 #########################
@@ -226,12 +233,16 @@ fi
 # configure init rules restart all processes
 ##############################################
 
-echo "restarting mesos processes"
+echo "(re)starting mesos and framework processes"
 if ismaster ; then
   sudo restart zookeeper
   sudo start mesos-master
-  sudo start marathon
-  sudo start chronos
+  if [ "$MARATHONENABLED" == "true" ] ; then
+    sudo start marathon
+  fi
+  if [ "$CHRONOSENABLED" == "true" ] ; then
+    sudo start chronos
+  fi
 else
   echo manual | sudo tee /etc/init/zookeeper.override
   sudo stop zookeeper
@@ -252,7 +263,7 @@ echo "processes after restarting mesos"
 ps ax
 
 # Run swarm manager container on port 2376 (no auth)
-if ismaster ; then
+if [ ismaster ] && [ "$SWARMENABLED" == "true" ] ; then
   echo "starting docker swarm"
   echo "sleep to give master time to come up"
   sleep 10
