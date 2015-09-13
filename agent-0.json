@@ -99,22 +99,19 @@
       }
     },
     "swarmEnabled": {
-      "type": "bool",
-      "defaultValue": false,
+      "type": "string",
       "metadata": {
         "description": "Flag for enabling the Docker Swarm framework."
       }
     },
     "marathonEnabled": {
-      "type": "bool",
-      "defaultValue": true,
+      "type": "string",
       "metadata": {
         "description": "Flag for enabling the Marathon framework."
       }
     },
     "chronosEnabled": {
-      "type": "bool",
-      "defaultValue": true,
+      "type": "string",
       "metadata": {
         "description": "Flag for enabling the Chronos framework."
       }

@@ -39,12 +39,12 @@
     "value": "c1"
   },
   "swarmEnabled": {
-    "value": false
+    "value": "false"
   },
   "marathonEnabled": {
-    "value": true
+    "value": "true"
   },
   "chronosEnabled": {
-    "value": false
+    "value": "false"
   }
 }
