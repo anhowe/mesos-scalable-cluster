@@ -209,12 +209,6 @@ if ismaster ; then
   sudo cp /etc/mesos/zk /etc/marathon/conf/master
   zkmarathonconfig=$(zkconfig "marathon")
   echo $zkmarathonconfig | sudo tee /etc/marathon/conf/zk
-  # setup chronos
-  sudo cp /etc/marathon/conf/master /etc/chronos/conf
-  zkchronoshosts=$(zkhosts)
-  echo $zkchronoshosts | sudo tee /etc/chronos/conf/zk_hosts
-  echo "/chronos" | sudo tee /etc/chronos/conf/zk_path
-  sudo cp /etc/mesos-master/hostname /etc/chronos/conf
   echo 'Mesos Cluster on Microsoft Azure' | sudo tee /etc/mesos-master/cluster
 fi
 
