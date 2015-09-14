@@ -10,8 +10,10 @@ ps axjf
 
 AZUREUSER=$1
 HOMEDIR="/home/$AZUREUSER"
+VMNAME=`hostname`
 echo "User: $AZUREUSER"
 echo "User home dir: $HOMEDIR"
+echo "vmname: $VMNAME"
 
 ###################
 # Common Functions
