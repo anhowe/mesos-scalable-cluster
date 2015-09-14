@@ -35,7 +35,7 @@
     },
     "agentCount": {
       "type": "int",
-      "defaultValue": 0,
+      "defaultValue": 1,
       "metadata": {
         "description": "The number of mesos agents for the cluster."
       }
@@ -54,7 +54,7 @@
     },
     "jumpboxConfiguration": {
       "type": "string",
-      "defaultValue": "none",
+      "defaultValue": "windows",
       "allowedValues": [
         "none",
         "linux",
@@ -79,6 +79,7 @@
       "type": "string",
       "defaultValue": "Standard_D1",
       "allowedValues": [
+        "Standard_A1",
         "Standard_D1",
         "Standard_D2",
         "Standard_D3",
@@ -96,6 +97,7 @@
       "type": "string",
       "defaultValue": "Standard_D1",
       "allowedValues": [
+        "Standard_A1",
         "Standard_D1",
         "Standard_D2",
         "Standard_D3",
@@ -106,13 +108,14 @@
         "Standard_D14"
       ],
       "metadata": {
-        "description": "The size of the Virtual Machine."
+        "description": "The size of the Virtual Machine for the master."
       }
     },
     "jumpboxVMSize": {
       "type": "string",
       "defaultValue": "Standard_D2",
       "allowedValues": [
+        "Standard_A1",
         "Standard_D1",
         "Standard_D2",
         "Standard_D3",
@@ -123,7 +126,7 @@
         "Standard_D14"
       ],
       "metadata": {
-        "description": "The size of the Virtual Machine."
+        "description": "The size of the Virtual Machine for the jumpbox."
       }
     },
     "clusterPrefix": {
