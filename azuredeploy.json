@@ -37,7 +37,7 @@
       "type": "int",
       "defaultValue": 1,
       "metadata": {
-        "description": "The number of mesos agents for the cluster."
+        "description": "The number of Mesos agents for the cluster."
       }
     },
     "masterCount": {
@@ -49,7 +49,7 @@
         5
       ],
       "metadata": {
-        "description": "The number of mesos masters for the cluster."
+        "description": "The number of Mesos masters for the cluster."
       }
     },
     "jumpboxConfiguration": {
@@ -139,6 +139,10 @@
     "swarmEnabled": {
       "type": "string",
       "defaultValue": "false",
+      "allowedValues": [
+        "true",
+        "false"
+      ],
       "metadata": {
         "description": "Flag for enabling the Docker Swarm framework."
       }
@@ -146,6 +150,10 @@
     "marathonEnabled": {
       "type": "string",
       "defaultValue": "true",
+      "allowedValues": [
+        "true",
+        "false"
+      ],
       "metadata": {
         "description": "Flag for enabling the Marathon framework."
       }
@@ -153,6 +161,10 @@
     "chronosEnabled": {
       "type": "string",
       "defaultValue": "true",
+      "allowedValues": [
+        "true",
+        "false"
+      ],
       "metadata": {
         "description": "Flag for enabling the Chronos framework."
       }
