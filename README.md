@@ -27,9 +27,9 @@ Here are notes for troubleshooting:
  * event though the VMs finish quickly mesos can take 5-15 minutes to install, check /var/log/azure/firstinstall.log for the completion status.
  * the linux jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop via VNC and an SSH tunnel.
  * if using a Windows jumpbox the explorer browser in windows needs to be setup in compatibility mode, otherwise the mesos UI will not display.  After starting the browser go to settings, compatibility mode and ensure "Display intranet sites in compability mode" is unchecked
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/windows-compatibility.png)
+ ![Image of disabling windows compatibility](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/windows-compatibility.png)
 
-# Cluster Walkthrough
+# Mesos Cluster with Marathon Walkthrough
 
 Before running the walkthrough ensure you have chosen "true" for "marathonEnabled" parameter.  This walk through is based the wonderful digital ocean tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-a-production-ready-mesosphere-cluster-on-ubuntu-14-04
 
@@ -38,11 +38,11 @@ Before running the walkthrough ensure you have chosen "true" for "marathonEnable
 
  2. then click browse all, followed by "resource groups", and choose your resource group
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-resourcegroups.png)
+ ![Image of resource groups in portal](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-resourcegroups.png)
 
  3. then expand your resources, and copy the dns names of your jumpbox (if chosen), and your NAT public ip addresses.
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-publicipaddresses.png)
+ ![Image of public ip addresses in portal](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-publicipaddresses.png)
 
 2. Connect to your cluster
  1. linux jumpbox - start a VNC to the jumpbox using instructions https://github.com/anhowe/ubuntu-devbox.  The jumpbox takes an hour to configure.  If the desktop is not ready, you can tail /var/log/azure/firstinstall.log to watach installation.
@@ -61,11 +61,11 @@ Before running the walkthrough ensure you have chosen "true" for "marathonEnable
 
  2. On top of page, click frameworks and notice your Marathon and Swarm frameworks
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-frameworks.png)
+ ![Image of mesos cluster frameworks on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-frameworks.png)
 
  3. On top of page, click agents and you can see your agents.  On windows or linux jumpbox you can also drill down into the slave and see its logs.
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-agents.png)
+ ![Image of mesos agents on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-agents.png)
 
 5. browse and explore Marathon UI http://c1master1:8080 (or if using tunnel http://localhost:8080 )
 
@@ -75,23 +75,27 @@ Before running the walkthrough ensure you have chosen "true" for "marathonEnable
  3. type "/bin/bash "for i in {1..5}; do echo MyFirstApp $i; sleep 1; done" for the command
  4. scroll to bottom and click create
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp.png)
+ ![Image of marathon new app dialog](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp.png)
 
 7. you will notice the new app change state from not running to running
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp-status.png)
+ ![Image of the new application status](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-newapp-status.png)
 
 8. browse back to mesos http://c1master1:5050.  You will notice the running tasks and the completed tasks.  Click on the host of the completed tasks and also look at the sandbox.
 
- ![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
+ ![Image of mesos completed tasks](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos-completed-tasks.png)
 
-# Marathon Walkthrough
+9. All nodes are running docker, so to run a docker app browse back to marathon http://c1master1:8080, and create an application to run "sudo docker run hello-world".  Once running browse back to mesos in a similar fashion to see that it has run:
+
+ ![Image of setting up docker application in marathon](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/marathon-docker.png)
+
+# Chronos Walkthrough
 
 Before running this walkthrough ensure you have created a cluster choosing "true" for the "marathonEnabled" parameter.
 
 1. from the jumpbox browse to http://c1master1:4400/, and verify you see the marathon Web UI:
 
-![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/chronos-ui.png)
+ ![Image of chronos UI](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/chronos-ui.png)
 
 2. Click Add and fill in the following details:
  1. Name - "MyFirstApp"
@@ -99,11 +103,15 @@ Before running this walkthrough ensure you have created a cluster choosing "true
  3. Owner, and Owner Name - you can put random information Here
  4. Schedule - Set to P"T1M" in order to run this every minute
 
-![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/chronos-ui.png)
+ ![Image of adding a new scheduled operation in Chronos](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/chronos.png)
 
 3. Click Create
 
 4. Watch the task run, and then browse back to the Mesos UI http://c1master1:5050 and observe the output in the completed task.
+
+5. All nodes are running docker, so to run a docker app browse back to Chronos http://c1master1:4400, and create an application to run "sudo docker run hello-world".  Once running browse back to mesos in a similar fashion to verify that it has run:
+
+ ![Image of setting up docker application in marathon](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/chronos-docker.png)
 
 # Swarm Walkthrough
 
@@ -111,7 +119,7 @@ Before running this walkthrough ensure you have created a cluster choosing "true
 
 1. from the jumpbox browse to http://c1master1:5050/#/frameworks, and verify swarm is working:
 
-![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/swarm-framework.png)
+ ![Image of the Swarm framework in Mesos](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/swarm-framework.png)
 
 2. SSH to the master from the jumpbox or hitting port 2211 on the public IP
 
@@ -125,7 +133,7 @@ Before running this walkthrough ensure you have created a cluster choosing "true
 
 7. Browse to http://c1master1:5050/, and see the "hello-world" process that has just completed.  Browse to Log:
 
-![Image of mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/docker-hello-world.png)
+ ![Image of docker hello world using swarm](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/completed-hello-world.png)
 
 # Questions
 **Q.** Why is there a jumpbox?
