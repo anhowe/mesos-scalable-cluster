@@ -19,14 +19,13 @@ The following image is an example of a cluster with 1 jumpbox, 3 masters, and 3 
 ![Image of Mesos cluster on azure](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/mesos.png)
 
 You can see the following parts:
-1. Mesos on port 5050 - Mesos is the distributed systems kernel that abstracts cpu, memory and other resources, and offers these to services named "frameworks" for scheduling of workloads.
-2. Marathon on port 8080 - Marathon is a scheduler for Mesos that is equivalent to init on a single linux machine: it schedules long running tasks for the whole cluster.
-3. Chronos on port 4400 - Chronos is a scheduler for Mesos that is equivalent to cron on a single linux machine: it schedules periodic tasks for the whole cluster.
-4. Swarm on port 2375 - Swarm is an experimental framework from Docker used for scheduling docker style workloads.  This framework is buggy and is disabled in the parameters by default.  You will notice in the walkthrough below, you can run your Docker workloads in Marathon and Chronos.
+
+1. **Mesos on port 5050** - Mesos is the distributed systems kernel that abstracts cpu, memory and other resources, and offers these to services named "frameworks" for scheduling of workloads.
+2. **Marathon on port 8080** - Marathon is a scheduler for Mesos that is equivalent to init on a single linux machine: it schedules long running tasks for the whole cluster.
+3. **Chronos on port 4400** - Chronos is a scheduler for Mesos that is equivalent to cron on a single linux machine: it schedules periodic tasks for the whole cluster.
+4. **Swarm on port 2375** - Swarm is an experimental framework from Docker used for scheduling docker style workloads.  This framework is buggy and is disabled in the parameters by default.  You will notice in the walkthrough below, you can run your Docker workloads in Marathon and Chronos.
 
 All VMs are on the same private subnet, 10.0.0.0/24, and fully accessible to each other.
-
-Here is a
 
 # Installation Notes
 
