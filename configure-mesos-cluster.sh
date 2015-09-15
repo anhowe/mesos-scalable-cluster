@@ -26,6 +26,8 @@ MASTERPREFIX=$3
 SWARMENABLED=$4
 MARATHONENABLED=$5
 CHRONOSENABLED=$6
+ACCOUNTNAME=$7
+ACCOUNTKEY=$8
 VMNAME=`hostname`
 VMNUMBER=`echo $VMNAME | sed 's/.*[^0-9]\([0-9]\+\)*$/\1/'`
 VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
@@ -36,6 +38,7 @@ echo "Master Prefix: $MASTERPREFIX"
 echo "vmname: $VMNAME"
 echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
 echo "SWARMENABLED: $SWARMENABLED, MARATHONENABLED: $MARATHONENABLED, CHRONOSENABLED: $CHRONOSENABLED"
+echo "ACCOUNTNAME: $ACCOUNTNAME"
 
 ###################
 # Common Functions
@@ -147,6 +150,7 @@ time wget -qO- https://get.docker.com | sh
 
 # Start Docker and listen on :2375 (no auth, but in vnet)
 echo 'DOCKER_OPTS="-H unix:///var/run/docker.sock -H 0.0.0.0:2375"' | sudo tee /etc/default/docker
+echo 'DOCKER_OPTS="$DOCKER_OPTS --insecure-registry 137.135.93.9"' | sudo tee -a /etc/default/docker
 sudo service docker restart
 
 ensureDocker()
@@ -171,6 +175,20 @@ ensureDocker()
   fi
 }
 ensureDocker
+
+############
+# setup OMS
+############
+
+if [ $ACCOUNTKEY != "disabled" ]
+then
+  set +x
+  EPSTRING="DefaultEndpointsProtocol=https;AccountName=${ACCOUNTNAME};AccountKey=${ACCOUNTKEY}"
+  docker run –d 137.135.93.9/msdockeragentv3 http://${VMNAME}:2375 "${EPSTRING}"
+  set -x
+fi
+
+
 
 ##################
 # Install Mesos

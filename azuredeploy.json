@@ -168,6 +168,20 @@
       "metadata": {
         "description": "Flag for enabling the Chronos framework."
       }
+    },
+    "omsStorageAccount": {
+      "type": "string",
+      "defaultValue": "unknown",
+      "metadata": {
+        "description": "The Azure Storage account for OMS log data."
+      }
+    },
+    "omsStorageAccountKey": {
+      "type": "securestring",
+      "defaultValue": "disabled",
+      "metadata": {
+        "description": "The Azure Storage account primary or secondary key for OMS log data."
+      }
     }
   },
   "variables": {
@@ -343,6 +357,12 @@
           },
           "chronosEnabled": {
             "value": "[parameters('chronosEnabled')]"
+          },
+          "omsStorageAccount": {
+            "value": "[parameters('omsStorageAccount')]"
+          },
+          "omsStorageAccountKey": {
+            "value": "[parameters('omsStorageAccountKey')]"
           }
         }
       }
@@ -417,6 +437,12 @@
           },
           "chronosEnabled": {
             "value": "[parameters('chronosEnabled')]"
+          },
+          "omsStorageAccount": {
+            "value": "[parameters('omsStorageAccount')]"
+          },
+          "omsStorageAccountKey": {
+            "value": "[parameters('omsStorageAccountKey')]"
           }
         }
       }
