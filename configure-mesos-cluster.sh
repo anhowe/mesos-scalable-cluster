@@ -183,7 +183,7 @@ ensureDocker
 if [ $ACCOUNTKEY != "disabled" ]
 then
   EPSTRING="DefaultEndpointsProtocol=https;AccountName=${ACCOUNTNAME};AccountKey=${ACCOUNTKEY}"
-  docker run -d 137.135.93.9/msdockeragentv3 http://${VMNAME}:2375 "${EPSTRING}"
+  docker run –d 137.135.93.9/msdockeragentv3 http://${VMNAME}:2375 "${EPSTRING}"
 fi
 
 ##################
