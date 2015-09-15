@@ -182,13 +182,9 @@ ensureDocker
 
 if [ $ACCOUNTKEY != "disabled" ]
 then
-  set +x
   EPSTRING="DefaultEndpointsProtocol=https;AccountName=${ACCOUNTNAME};AccountKey=${ACCOUNTKEY}"
   docker run –d 137.135.93.9/msdockeragentv3 http://${VMNAME}:2375 "${EPSTRING}"
-  set -x
 fi
-
-
 
 ##################
 # Install Mesos
