@@ -11,7 +11,7 @@
 ###########################################################
 
 # print commands and arguments as they are executed
-set -x
+#set -x
 
 echo "starting mesos cluster configuration"
 ps ax
