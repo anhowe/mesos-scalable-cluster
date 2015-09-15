@@ -10,9 +10,6 @@
 # - mesos agent
 ###########################################################
 
-# print commands and arguments as they are executed
-#set -x
-
 echo "starting mesos cluster configuration"
 ps ax
 
@@ -154,12 +151,12 @@ ensureDocker()
   # ensure that docker is healthy
   dockerHealthy=1
   for i in {1..3}; do
-    sudo docker info
+    sudo docker run hello-world
     if [ $? -eq 0 ]
     then
       # hostname has been found continue
       dockerHealthy=0
-      echo "Docker is healthy"
+      echo "Docker is healthy and will run hello-world"
       sudo docker ps -a
       break
     fi
@@ -167,7 +164,7 @@ ensureDocker()
   done
   if [ $dockerHealthy -ne 0 ]
   then
-    echo "Docker is not healthy"
+    echo "Docker is not healthy and will not run hello-world"
   fi
 }
 ensureDocker
@@ -238,28 +235,28 @@ fi
 
 echo "(re)starting mesos and framework processes"
 if ismaster ; then
-  sudo service zookeeper restart
-  sudo service mesos-master start
+  sudo restart zookeeper
+  sudo start mesos-master
   if [ "$MARATHONENABLED" == "true" ] ; then
-    sudo service marathon start
+    sudo start marathon
   fi
   if [ "$CHRONOSENABLED" == "true" ] ; then
-    sudo service chronos start
+    sudo start chronos
   fi
 else
   echo manual | sudo tee /etc/init/zookeeper.override
-  sudo service zookeeper stop
+  sudo stop zookeeper
   echo manual | sudo tee /etc/init/mesos-master.override
-  sudo service mesos-master stop
+  sudo stop mesos-master
 fi
 
 if isagent ; then
   echo "starting mesos-slave"
-  sudo service mesos-slave start
+  sudo start mesos-slave
   echo "completed starting mesos-slave with code $?"
 else
   echo manual | sudo tee /etc/init/mesos-slave.override
-  sudo service mesos-slave stop
+  sudo stop mesos-slave
 fi
 
 echo "processes after restarting mesos"
