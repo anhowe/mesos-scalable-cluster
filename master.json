@@ -125,7 +125,7 @@
     "nodesLbIPConfigID": "[concat(variables('nodesLbID'),'/frontendIPConfigurations/', variables('nodesLbIPConfigName'))]",
     "nodesLbBackendPoolName": "node-pool",
     "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-mesos-cluster.sh | nohup /bin/bash -s ')]",
-    "wgetCommandPostfix":  " > /var/log/azure/firstinstall.log 2>&1 &'",
+    "wgetCommandPostfix":  " > /var/log/azure/mesos-scalable-cluster-bootstrap.log 2>&1 &'",
     "commandPrefix": "/bin/bash -c '"
   },
   "resources": [
