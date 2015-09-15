@@ -171,14 +171,13 @@
     },
     "omsStorageAccount": {
       "type": "string",
-      "defaultValue": "unknown",
+      "defaultValue": "none",
       "metadata": {
         "description": "The Azure Storage account for OMS log data."
       }
     },
     "omsStorageAccountKey": {
       "type": "securestring",
-      "defaultValue": "disabled",
       "metadata": {
         "description": "The Azure Storage account primary or secondary key for OMS log data."
       }

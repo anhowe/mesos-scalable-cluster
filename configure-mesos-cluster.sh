@@ -182,7 +182,7 @@ ensureDocker
 # setup OMS
 ############
 
-if [ $ACCOUNTKEY != "disabled" ]
+if [ $ACCOUNTNAME != "none" ]
 then
   set +x
   EPSTRING="DefaultEndpointsProtocol=https;AccountName=${ACCOUNTNAME};AccountKey=${ACCOUNTKEY}"
