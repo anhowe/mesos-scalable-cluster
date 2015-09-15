@@ -70,7 +70,7 @@
     "osImageSKU": "14.04.3-LTS",
     "osImageVersion": "latest",
     "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-ubuntu.sh | nohup /bin/bash -s ')]",
-    "wgetCommandPostfix":  " > /var/log/azure/mesos-scalable-cluster-bootstrap.log 2>&1 &'",
+    "wgetCommandPostfix":  " >> /var/log/azure/cluster-bootstrap.log 2>&1 &'",
     "commandPrefix": "/bin/bash -c '"
   },
   "resources": [
