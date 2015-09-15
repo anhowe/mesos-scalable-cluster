@@ -31,8 +31,8 @@ All VMs are on the same private subnet, 10.0.0.0/24, and fully accessible to eac
 # Installation Notes
 
 Here are notes for troubleshooting:
- * the installation log for the linux jumpbox, masters, and agents are in /var/log/azure/firstinstall.log
- * event though the VMs finish quickly Mesos can take 5-15 minutes to install, check /var/log/azure/firstinstall.log for the completion status.
+ * the installation log for the linux jumpbox, masters, and agents are in /var/log/azure/mesos-scalable-cluster-bootstrap.log
+ * event though the VMs finish quickly Mesos can take 5-15 minutes to install, check /var/log/azure/mesos-scalable-cluster-bootstrap.log for the completion status.
  * the linux jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop via VNC and an SSH tunnel.
  * if using a Windows jumpbox the explorer browser in windows needs to be setup in compatibility mode, otherwise the Mesos UI will not display.  After starting the browser go to settings, compatibility mode and ensure "Display intranet sites in compability mode" is unchecked
 
@@ -54,7 +54,7 @@ Before running the walkthrough ensure you have chosen "true" for "marathonEnable
  ![Image of public ip addresses in portal](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/portal-publicipaddresses.png)
 
 2. Connect to your cluster
- 1. linux jumpbox - start a VNC to the jumpbox using instructions https://github.com/anhowe/ubuntu-devbox.  The jumpbox takes an hour to configure.  If the desktop is not ready, you can tail /var/log/azure/firstinstall.log to watach installation.
+ 1. linux jumpbox - start a VNC to the jumpbox using instructions https://github.com/anhowe/ubuntu-devbox.  The jumpbox takes an hour to configure.  If the desktop is not ready, you can tail /var/log/azure/mesos-scalable-cluster-bootstrap.log to watach installation.
  2. windows jumpbox - remote desktop to the windows jumpbox
  3. no jumpbox - SSH to port 2211 on your NAT creating a tunnel to port 5050 and port 8080.  Then use the browser of your desktop to browse these ports.
 
@@ -152,4 +152,4 @@ Before running this walkthrough ensure you have created a cluster choosing "true
 
 **Q.** My cluster just completed but Mesos is not up.
 
-**A.** After your template finishes, your cluster is still running installation.  You can run "tail -f /var/log/azure/firstinstall.log" to verify the status has completed.
+**A.** After your template finishes, your cluster is still running installation.  You can run "tail -f /var/log/azure/mesos-scalable-cluster-bootstrap.log" to verify the status has completed.

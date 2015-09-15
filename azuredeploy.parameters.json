@@ -1,6 +1,6 @@
 {
   "newStorageAccountNamePrefix": {
-    "value": "mesosscalable0914b"
+    "value": "mesosscalable0914g"
   },
   "adminUsername": {
     "value": "azureuser"
@@ -9,10 +9,10 @@
     "value": "password1234$"
   },
   "dnsNameForContainerServicePublicIP": {
-    "value": "mesosscalable0914b"
+    "value": "mesosscalable0914g"
   },
   "dnsNameForJumpboxPublicIP": {
-    "value": "mesosscalablejb0914b"
+    "value": "mesosscalablejb0914g"
   },
   "agentCount": {
     "value": 1
