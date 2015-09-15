@@ -123,7 +123,7 @@
     "storageAccountsCount": "[add(div(parameters('agentCount'), variables('vmsPerStorageAccount')), mod(add(mod(parameters('agentCount'), variables('vmsPerStorageAccount')),2), add(mod(parameters('agentCount'), variables('vmsPerStorageAccount')),1)))]",
     "storageAccountType": "Standard_GRS",
     "wgetCommandPrefix": "[concat('wget --tries 20 --retry-connrefused --waitretry=15 -qO- ', parameters('customScriptLocation'), 'configure-mesos-cluster.sh | nohup /bin/bash -s ')]",
-    "wgetCommandPostfix":  " >> /var/log/azure/mesos-scalable-cluster-bootstrap.log 2>&1 &'",
+    "wgetCommandPostfix":  " > /var/log/azure/mesos-scalable-cluster-bootstrap.log 2>&1 &'",
     "commandPrefix": "/bin/bash -c '"
   },
   "resources": [
