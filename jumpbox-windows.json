@@ -172,7 +172,7 @@
         "type": "CustomScriptExtension",
         "typeHandlerVersion": "1.4",
         "settings": {
-          "commandToExecute": "[concat(variables('setBrowserFirstTabDefaultPrefix'),variables('masterVMNamePrefix'),variables('setBrowserFirstTabDefaultPostfix')]"
+          "commandToExecute": "[concat(variables('setBrowserFirstTabDefaultPrefix'),parameters('masterVMNamePrefix'),variables('setBrowserFirstTabDefaultPostfix')]"
         }
       }
     }
