@@ -13,6 +13,7 @@
 set -x
 
 echo "starting mesos cluster configuration"
+date
 ps ax
 
 #############
@@ -305,5 +306,5 @@ fi
 echo "processes at end of script"
 ps ax
 echo "Finished installing and configuring docker and swarm"
-
+date
 echo "completed mesos cluster configuration"
