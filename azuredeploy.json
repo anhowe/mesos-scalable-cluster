@@ -490,6 +490,9 @@
           },
           "customScriptLocation": {
             "value": "[variables('customScriptLocation')]"
+          },
+          "masterVMNamePrefix": {
+            "value": "[variables('masterVMNamePrefix')]"
           }
         }
       }

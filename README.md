@@ -34,9 +34,6 @@ Here are notes for troubleshooting:
  * the installation log for the linux jumpbox, masters, and agents are in /var/log/azure/cluster-bootstrapcluster-bootstrap.log
  * event though the VMs finish quickly Mesos can take 5-15 minutes to install, check /var/log/azure/cluster-bootstrap.log for the completion status.
  * the linux jumpbox is based on https://github.com/anhowe/ubuntu-devbox and will take 1 hour to configure.  Visit https://github.com/anhowe/ubuntu-devbox to learn how to know when setup is completed, and then how to access the desktop via VNC and an SSH tunnel.
- * if using a Windows jumpbox the explorer browser in windows needs to be setup in compatibility mode, otherwise the Mesos UI will not display.  After starting the browser go to settings, compatibility mode and ensure "Display intranet sites in compability mode" is unchecked
-
- ![Image of disabling windows compatibility](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/windows-compatibility.png)
 
 # Mesos Cluster with Marathon Walkthrough
 
