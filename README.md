@@ -145,15 +145,14 @@ Before running this walkthrough ensure you have created a cluster choosing "true
 
 Try the following workloads to test your new mesos cluster.  Run these on Marathon using the examples above
 
-1. ![docker run –d rgardler/fah](https://hub.docker.com/r/rgardler/fah/) - Folding@Home is searching for a cure for Cancer, Alzheimers, Parkinsons and other such diseases. Donate some compute time to this fantastic effort.
+1. [docker run –d rgardler/fah!](https://hub.docker.com/r/rgardler/fah/) - Folding@Home is searching for a cure for Cancer, Alzheimers, Parkinsons and other such diseases. Donate some compute time to this fantastic effort.
 
-2. ![docker run --privileged anhowe/azure-file-workload STORAGEACCOUNTNAME STORAGEACCOUNTKEY SHARENAME](https://github.com/anhowe/azure-file-workload) - From each container mount your Azure storage by using Azure files
+2. [docker run --privileged anhowe/azure-file-workload STORAGEACCOUNTNAME STORAGEACCOUNTKEY SHARENAME!](https://github.com/anhowe/azure-file-workload) - From each container mount your Azure storage by using Azure files
 
 # Questions
 **Q.** Why is there a jumpbox?
 
 **A.** The jumpbox is used for easy troubleshooting on the private subnet.  The Mesos Web UI requires access to all machines.  Also the web UI.  You could also consider using OpenVPN to access the private subnet.
-
 
 **Q.** My cluster just completed but Mesos is not up.
 
