@@ -201,7 +201,7 @@
         "count": "[parameters('agentCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix')[mod(copyIndex(),variables('storageAccountPrefixCount'))],variables('storageAccountPrefix')[div(copyIndex(),variables('storageAccountPrefixCount'))], parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix')[mod(add(1,div(copyIndex(),variables('vmsPerStorageAccount'))),variables('storageAccountPrefixCount'))],variables('storageAccountPrefix')[div(add(1,div(copyIndex(),variables('vmsPerStorageAccount'))),variables('storageAccountPrefixCount'))], parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))))]",
         "[concat('Microsoft.Network/networkInterfaces/', parameters('agentVMNamePrefix'), copyIndex(1), '-nic')]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySet'))]"
       ],
@@ -227,7 +227,7 @@
           "osDisk": {
             "name": "[concat(parameters('agentVMNamePrefix'), copyIndex(1),'-osdisk')]",
             "vhd": {
-              "uri": "[concat('http://', variables('storageAccountPrefix')[mod(copyIndex(),variables('storageAccountPrefixCount'))],variables('storageAccountPrefix')[div(copyIndex(),variables('storageAccountPrefixCount'))], parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))), '.blob.core.windows.net/vhds/', parameters('masterVMNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
+              "uri": "[concat('http://',variables('storageAccountPrefix')[mod(add(1,div(copyIndex(),variables('vmsPerStorageAccount'))),variables('storageAccountPrefixCount'))],variables('storageAccountPrefix')[div(add(1,div(copyIndex(),variables('vmsPerStorageAccount'))),variables('storageAccountPrefixCount'))],parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))), '.blob.core.windows.net/vhds/', parameters('masterVMNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
