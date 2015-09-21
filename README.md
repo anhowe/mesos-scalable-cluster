@@ -141,7 +141,7 @@ Before running this walkthrough ensure you have created a cluster choosing "true
 
  ![Image of docker hello world using Swarm](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/completed-hello-world.png)
 
-# Sample workloads
+# Sample Workloads
 
 Try the following workloads to test your new mesos cluster.  Run these on Marathon using the examples above
 
