@@ -199,7 +199,7 @@
     "subnetPrefix": "10.0.0.0/18",
     "jumpboxAddr": 4,
     "masterFirstAddr": 5,
-    "agentFirstAddr": 100,
+    "agentFirstAddr": 50,
     "nsgName": "node-nsg",
     "nsgID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgName'))]",
     "storageAccountType": "Standard_GRS",
