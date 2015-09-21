@@ -259,7 +259,7 @@ if ismaster ; then
   RESOLVER=`cat /etc/resolv.conf | grep nameserver | tail -n 1 | awk '{print $2}'`
   echo "
  {
-  \"zk\": \"zk://127.0.0.1:2181/mesos\",
+  \"zk\": \"$zkmesosconfig\",
   \"refreshSeconds\": 60,
   \"ttl\": 60,
   \"domain\": \"mesos\",
