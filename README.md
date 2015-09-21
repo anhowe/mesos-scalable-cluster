@@ -141,6 +141,14 @@ Before running this walkthrough ensure you have created a cluster choosing "true
 
  ![Image of docker hello world using Swarm](https://raw.githubusercontent.com/anhowe/mesos-scalable-cluster/master/images/completed-hello-world.png)
 
+# Sample workloads
+
+Try the following workloads to test your new mesos cluster.  Run these on Marathon using the examples above
+
+1. ![docker run –d rgardler/fah](https://hub.docker.com/r/rgardler/fah/) - Folding@Home is searching for a cure for Cancer, Alzheimers, Parkinsons and other such diseases. Donate some compute time to this fantastic effort.
+
+2. ![docker run --privileged anhowe/azure-file-workload STORAGEACCOUNTNAME STORAGEACCOUNTKEY SHARENAME](https://github.com/anhowe/azure-file-workload) - From each container mount your Azure storage by using Azure files
+
 # Questions
 **Q.** Why is there a jumpbox?
 
