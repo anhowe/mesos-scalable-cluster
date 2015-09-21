@@ -52,8 +52,7 @@ When you launch the installation of the cluster, you need to specify the followi
 * SWARMENABLED: you can enable Swarm as a framework in the cluster
 * MARATHONENABLED: true if you want to enable the Marathon framework in the cluster
 * CHRONOSENABLED: true if you want to enable the Chronos framework in the cluster
-* OMSSTORAGEACCOUNTKEY: Azure storage keys that are going to be used to enable OMS log data
-   
+* OMSSTORAGEACCOUNTKEY: Azure storage keys that are goin   
 # Mesos Cluster with Marathon Walkthrough
 
 Before running the walkthrough ensure you have chosen "true" for "marathonEnabled" parameter.  This walk through is based the wonderful digital ocean tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-a-production-ready-mesosphere-cluster-on-ubuntu-14-04
@@ -79,7 +78,7 @@ Before running the walkthrough ensure you have chosen "true" for "marathonEnable
  2. windows jumpbox - open browser and browse to http://c1master1:5050
  3. no jumpbox - browse to http://localhost:5050
 
-NOTE: if you changed the default prefix while creating the cluster using the ARM template, the name of the cluster is going to be different. The url to use is http://<prefix you used>master1:5050
+NOTE: if you changed the default prefix while creating the cluster using the ARM template, the name of the cluster is going to be different. The url to use is http://"prefix you used"master1:5050
 
 4. Browse Mesos:
  1. scroll down the page and notice your resources of CPU and memory.  These are your agents
