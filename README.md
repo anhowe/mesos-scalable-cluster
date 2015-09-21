@@ -26,7 +26,7 @@ You can see the following parts:
 4. **Docker on port 2375** - The Docker engine runs containerized workloads and each Master and Agent run the Docker engine.  Mesos runs Docker workloads, and examples on how to do this are provided in the Marathon and Chronos walkthrough sections of this readme.
 5. **Swarm on port 2376** - Swarm is an experimental framework from Docker used for scheduling docker style workloads.  The Swarm framework is disabled by default because it has a showstopper bug where it grabs all the resources [link to Swarm show stopper!](https://github.com/docker/swarm/issues/1183).  As a workaround, you will notice in the walkthrough below, you can run your Docker workloads in Marathon and Chronos.
 
-All VMs are on the same private subnet, 10.0.0.0/24, and fully accessible to each other.
+All VMs are on the same private subnet, 10.0.0.0/18, and fully accessible to each other.
 
 # Installation Notes
 

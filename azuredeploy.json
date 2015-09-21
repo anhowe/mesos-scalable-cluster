@@ -196,7 +196,7 @@
     "subnetName": "Subnet",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
     "addressPrefix": "10.0.0.0/16",
-    "subnetPrefix": "10.0.0.0/24",
+    "subnetPrefix": "10.0.0.0/18",
     "jumpboxAddr": 4,
     "masterFirstAddr": 5,
     "agentFirstAddr": 100,
@@ -208,7 +208,9 @@
       "agent-0.json",
       "agent-gt0.json"
     ],
-    "agentFile": "[variables('agentFiles')[mod(add(parameters('agentCount'),2),add(parameters('agentCount'),1))]]"
+    "agentFile": "[variables('agentFiles')[mod(add(parameters('agentCount'),2),add(parameters('agentCount'),1))]]",
+    "omsStorageAccount": "[parameters('omsStorageAccount')]",
+    "omsStorageAccountKey": "[parameters('omsStorageAccountKey')]"
   },
   "resources": [
     {
@@ -358,10 +360,10 @@
             "value": "[parameters('chronosEnabled')]"
           },
           "omsStorageAccount": {
-            "value": "[parameters('omsStorageAccount')]"
+            "value": "[variables('omsStorageAccount')]"
           },
           "omsStorageAccountKey": {
-            "value": "[parameters('omsStorageAccountKey')]"
+            "value": "[variables('omsStorageAccountKey')]"
           }
         }
       }
@@ -438,10 +440,10 @@
             "value": "[parameters('chronosEnabled')]"
           },
           "omsStorageAccount": {
-            "value": "[parameters('omsStorageAccount')]"
+            "value": "[variables('omsStorageAccount')]"
           },
           "omsStorageAccountKey": {
-            "value": "[parameters('omsStorageAccountKey')]"
+            "value": "[variables('omsStorageAccountKey')]"
           }
         }
       }
