@@ -22,7 +22,7 @@ echo "vmname: $VMNAME"
 # setup ssh access
 ###################
 
-SSHDIR=$HOMEDIR/.sshg
+SSHDIR=$HOMEDIR/.ssh
 AUTHFILE=$SSHDIR/authorized_keys
 if [ `echo $SSHKEY | sed 's/^\(ssh-rsa \).*/\1/'` == "ssh-rsa" ] ; then
   if [ ! -d $SSHDIR ] ; then
