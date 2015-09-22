@@ -262,7 +262,7 @@ if ismaster ; then
   \"zk\": \"zk://127.0.0.1:2181/mesos\",
   \"refreshSeconds\": 60,
   \"ttl\": 60,
-  \"domain\": \"mesos\",cd
+  \"domain\": \"mesos\",
   \"port\": 53,
   \"resolvers\": [\"$RESOLVER\"],
   \"timeout\": 5,
