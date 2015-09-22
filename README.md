@@ -52,6 +52,7 @@ When you launch the installation of the cluster, you need to specify the followi
 * `swarmEnabled`: you can enable Swarm as a framework in the cluster
 * `marathonEnabled`: true if you want to enable the Marathon framework in the cluster
 * `chronosEnabled`: true if you want to enable the Chronos framework in the cluster
+* `sshRSAPublicKey`: Configure all linux machines with the SSH rsa public key string.  Use 'disabled' to not configure access with SSH rsa public key.
 
 # Mesos Cluster with Marathon Walkthrough
 
