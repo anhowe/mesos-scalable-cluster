@@ -169,6 +169,13 @@
         "description": "Flag for enabling the Chronos framework."
       }
     },
+    "sshRSAPublicKey": {
+      "type": "string",
+      "defaultValue": "disabled",
+      "metadata": {
+        "description": "Configure all linux machines with the SSH rsa public key string.  Use 'disabled' to not configure access with SSH rsa public key."
+      }
+    },
     "omsStorageAccount": {
       "type": "string",
       "defaultValue": "none",
@@ -359,6 +366,9 @@
           "chronosEnabled": {
             "value": "[parameters('chronosEnabled')]"
           },
+          "sshRSAPublicKey": {
+            "value": "[parameters('sshRSAPublicKey')]"
+          },
           "omsStorageAccount": {
             "value": "[variables('omsStorageAccount')]"
           },
@@ -439,6 +449,9 @@
           "chronosEnabled": {
             "value": "[parameters('chronosEnabled')]"
           },
+          "sshRSAPublicKey": {
+            "value": "[parameters('sshRSAPublicKey')]"
+          },
           "omsStorageAccount": {
             "value": "[variables('omsStorageAccount')]"
           },
@@ -495,6 +508,9 @@
           },
           "masterVMNamePrefix": {
             "value": "[variables('masterVMNamePrefix')]"
+          },
+          "sshRSAPublicKey": {
+            "value": "[parameters('sshRSAPublicKey')]"
           }
         }
       }
