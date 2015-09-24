@@ -111,8 +111,29 @@ ensureAzureNetwork()
     ip a
     exit 2
   fi
+  # ensure the host ip can resolve
+  networkHealthy=1
+  for i in {1..120}; do
+    hostname -i
+    if [ $? -eq 0 ]
+    then
+      # hostname has been found continue
+      networkHealthy=0
+      echo "the network is healthy"
+      break
+    fi
+    sleep 1
+  done
+  if [ $networkHealthy -ne 0 ]
+  then
+    echo "the network is not healthy, cannot resolve ip address, aborting install"
+    ifconfig
+    ip a
+    exit 2
+  fi
 }
 ensureAzureNetwork
+HOSTADDR=`hostname -i`
 
 ismaster ()
 {
@@ -174,7 +195,6 @@ zkconfig()
 # resolve self in DNS
 ######################
 
-HOSTADDR=`hostname -i`
 echo "$HOSTADDR $VMNAME" | sudo tee -a /etc/hosts
 
 ################
