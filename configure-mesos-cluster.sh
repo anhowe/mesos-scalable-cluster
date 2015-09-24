@@ -33,6 +33,7 @@ set -x
 AZUREUSER=$9
 SSHKEY=${10}
 HOMEDIR="/home/$AZUREUSER"
+HOSTADDR=`hostname -i`
 VMNAME=`hostname`
 VMNUMBER=`echo $VMNAME | sed 's/.*[^0-9]\([0-9]\+\)*$/\1/'`
 VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
@@ -40,7 +41,7 @@ VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
 echo "Master Count: $MASTERCOUNT"
 echo "Master Mode: $MASTERMODE"
 echo "Master Prefix: $MASTERPREFIX"
-echo "vmname: $VMNAME"
+echo "vmname: $VMNAME, $HOSTADDR"
 echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
 echo "SWARMENABLED: $SWARMENABLED, MARATHONENABLED: $MARATHONENABLED, CHRONOSENABLED: $CHRONOSENABLED"
 echo "ACCOUNTNAME: $ACCOUNTNAME"
@@ -170,6 +171,12 @@ zkconfig()
   echo $zkconfigstr
 }
 
+######################
+# resolve self in DNS
+######################
+
+echo "$HOSTADDR $VMNAME" | sudo tee -a /etc/hosts
+
 ################
 # Install Docker
 ################
@@ -293,11 +300,10 @@ if ismaster ; then
   \"ttl\": 0,
   \"domain\": \"mesos\",
   \"port\": 53,
-  \"resolvers\": [\"$RESOLVER\"],
   \"timeout\": 1,
   \"listener\": \"0.0.0.0\",
   \"email\": \"root.mesos-dns.mesos\",
-  \"externalon\": false
+  \"resolvers\": [\"$RESOLVER\"]
 }
 " > mesos-dns.json
   sudo mv mesos-dns.json /usr/local/mesos-dns/mesos-dns.json
