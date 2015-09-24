@@ -299,7 +299,7 @@ if ismaster  && [ "$MARATHONENABLED" == "true" ] ; then
   echo $zkmarathonconfig | sudo tee /etc/marathon/conf/zk
   # enable marathon to failover tasks to other nodes immediately
   echo 0 | sudo tee /etc/marathon/conf/failover_timeout
-  echo false | sudo tee /etc/marathon/conf/checkpoint
+  #echo false | sudo tee /etc/marathon/conf/checkpoint
 fi
 
 #########################################
