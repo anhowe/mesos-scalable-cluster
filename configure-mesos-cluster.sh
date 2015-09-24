@@ -33,7 +33,6 @@ set -x
 AZUREUSER=$9
 SSHKEY=${10}
 HOMEDIR="/home/$AZUREUSER"
-HOSTADDR=`hostname -i`
 VMNAME=`hostname`
 VMNUMBER=`echo $VMNAME | sed 's/.*[^0-9]\([0-9]\+\)*$/\1/'`
 VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
@@ -41,7 +40,7 @@ VMPREFIX=`echo $VMNAME | sed 's/\(.*[^0-9]\)*[0-9]\+$/\1/'`
 echo "Master Count: $MASTERCOUNT"
 echo "Master Mode: $MASTERMODE"
 echo "Master Prefix: $MASTERPREFIX"
-echo "vmname: $VMNAME, $HOSTADDR"
+echo "vmname: $VMNAME"
 echo "VMNUMBER: $VMNUMBER, VMPREFIX: $VMPREFIX"
 echo "SWARMENABLED: $SWARMENABLED, MARATHONENABLED: $MARATHONENABLED, CHRONOSENABLED: $CHRONOSENABLED"
 echo "ACCOUNTNAME: $ACCOUNTNAME"
@@ -175,6 +174,7 @@ zkconfig()
 # resolve self in DNS
 ######################
 
+HOSTADDR=`hostname -i`
 echo "$HOSTADDR $VMNAME" | sudo tee -a /etc/hosts
 
 ################
