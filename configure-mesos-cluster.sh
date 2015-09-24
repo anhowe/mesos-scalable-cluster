@@ -317,7 +317,7 @@ if ismaster ; then
 {
   \"zk\": \"zk://127.0.0.1:2181/mesos\",
   \"refreshSeconds\": 1,
-  \"ttl\": 0,
+  \"ttl\": 1,
   \"domain\": \"mesos\",
   \"port\": 53,
   \"timeout\": 1,
