@@ -285,7 +285,7 @@
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(variables('nodesLbID'),'/inboundNatRules/SSH-',parameters('masterVMNamePrefix'),copyIndex(1))]"
+                  "id": "[concat(variables('nodesLbID'),'/inboundNatRules/SSH-',parameters('agentVMNamePrefix'),copyIndex(1))]"
                 }
               ]
             }
@@ -329,7 +329,7 @@
           "osDisk": {
             "name": "[concat(parameters('agentVMNamePrefix'), copyIndex(1),'-osdisk')]",
             "vhd": {
-              "uri": "[concat('http://',variables('storageAccountPrefix')[mod(div(copyIndex(),variables('vmsPerStorageAccount')),variables('storageAccountPrefixCount'))],variables('storageAccountPrefix')[div(div(copyIndex(),variables('vmsPerStorageAccount')),variables('storageAccountPrefixCount'))],parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))), '.blob.core.windows.net/vhds/', parameters('masterVMNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
+              "uri": "[concat('http://',variables('storageAccountPrefix')[mod(div(copyIndex(),variables('vmsPerStorageAccount')),variables('storageAccountPrefixCount'))],variables('storageAccountPrefix')[div(div(copyIndex(),variables('vmsPerStorageAccount')),variables('storageAccountPrefixCount'))],parameters('newStorageAccountNamePrefix'),add(1,div(copyIndex(),variables('vmsPerStorageAccount'))), '.blob.core.windows.net/vhds/', parameters('agentVMNamePrefix'), copyIndex(1), '-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
