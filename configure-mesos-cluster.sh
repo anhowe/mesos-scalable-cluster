@@ -352,7 +352,7 @@ if isagent ; then
   echo "docker,mesos" | sudo tee /etc/mesos-slave/containerizers
   # Add resources configuration
   if ismaster ; then
-    echo "ports:[1-21,23-4399,4401-5049,5052-8079,8081-32000]" | sudo tee /etc/mesos-slave/resources
+    echo "ports:[1-21,23-79,81-4399,4401-5049,5052-8079,8081-32000]" | sudo tee /etc/mesos-slave/resources
   else
     echo "ports:[1-21,23-5050,5052-32000]" | sudo tee /etc/mesos-slave/resources
   fi

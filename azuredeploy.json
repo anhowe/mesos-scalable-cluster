@@ -33,6 +33,12 @@
         "description": "Sets the Domain name label for the container service.  The concatenation of the domain name label and the regionalized DNS zone make up the fully qualified domain name associated with the public IP address."
       }
     },
+    "dnsNameForApplicationPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Sets the Domain name label for the application.  The concatenation of the domain name label and the regionalized DNS zone make up the fully qualified domain name associated with the public IP address."
+      }
+    },
     "agentCount": {
       "type": "int",
       "defaultValue": 1,
@@ -251,6 +257,20 @@
             }
           },
           {
+            "name": "http",
+            "properties": {
+              "description": "HTTP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 250,
+              "direction": "Inbound"
+            }
+          },
+          {
             "name": "rdp",
             "properties": {
               "description": "RDP",
@@ -400,6 +420,9 @@
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
+          },
+          "dnsNameForApplicationPublicIP": {
+            "value": "[parameters('dnsNameForApplicationPublicIP')]"
           },
           "agentVMSize": {
             "value": "[parameters('agentVMSize')]"

@@ -20,6 +20,12 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "dnsNameForApplicationPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Sets the Domain name label for the application.  The concatenation of the domain name label and the regionalized DNS zone make up the fully qualified domain name associated with the public IP address."
+      }
+    },
     "agentVMSize": {
       "type": "string",
       "metadata": {
@@ -137,6 +143,11 @@
   },
   "variables": {
     "availabilitySet": "agentAvailabilitySet",
+    "appLbName": "appLb",
+    "nodesLbID": "[resourceId('Microsoft.Network/loadBalancers',variables('appLbName'))]",
+    "nodesLbIPConfigName": "NodesAppLBFrontEnd",
+    "nodesLbIPConfigID": "[concat(variables('nodesLbID'),'/frontendIPConfigurations/', variables('nodesLbIPConfigName'))]",
+    "nodesLbBackendPoolName": "node-app-pool",
     "vmsPerStorageAccount": 10,
     "storageAccountsCount": "[add(div(parameters('agentCount'), variables('vmsPerStorageAccount')), mod(add(mod(parameters('agentCount'), variables('vmsPerStorageAccount')),2), add(mod(parameters('agentCount'), variables('vmsPerStorageAccount')),1)))]",
     "storageAccountPrefix": [
@@ -175,6 +186,78 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('dnsNameForApplicationPublicIP')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsNameForApplicationPublicIP')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "name": "[variables('appLbName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForApplicationPublicIP'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "[variables('nodesLbIPConfigName')]",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('dnsNameForContainerServicePublicIP'))]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "[variables('nodesLbBackendPoolName')]"
+          }
+        ],
+        "probes": [],
+        "loadBalancingRules": [
+          {
+            "name": "LBRule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('nodesLbIPConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(variables('nodesLbID'), '/backendAddressPools/', variables('nodesLbBackendPoolName'))]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 80,
+              "backendPort": 80,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[variables('lbProbeID')]"
+              }
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "tcpProbe",
+            "properties": {
+              "protocol": "tcp",
+              "port": 80,
+              "intervalInSeconds": "5",
+              "numberOfProbes": "2"
+            }
+          }
+        ],
+        "inboundNatRules": []
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(parameters('agentVMNamePrefix'), copyIndex(1), '-nic')]",
       "location": "[resourceGroup().location]",
@@ -182,6 +265,9 @@
         "name": "nicLoopNode",
         "count": "[parameters('agentCount')]"
       },
+      "dependsOn": [
+        "[variables('nodesLbID')]"
+      ],
       "properties": {
         "ipConfigurations": [
           {
@@ -191,7 +277,17 @@
               "privateIPAddress": "[concat(split(parameters('subnetPrefix'),'0.0/18')[0], div(copyIndex(),variables('agentsPerIPv4Octet')), '.', add(mod(copyIndex(),variables('agentsPerIPv4Octet')), parameters('agentFirstAddr')))]",
               "subnet": {
                 "id": "[parameters('subnetRef')]"
-              }
+              },
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(variables('nodesLbID'), '/backendAddressPools/', variables('nodesLbBackendPoolName'))]"
+                }
+              ],
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(variables('nodesLbID'),'/inboundNatRules/SSH-',parameters('masterVMNamePrefix'),copyIndex(1))]"
+                }
+              ]
             }
           }
         ]

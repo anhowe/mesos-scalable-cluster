@@ -20,6 +20,12 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "dnsNameForApplicationPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Sets the Domain name label for the application.  The concatenation of the domain name label and the regionalized DNS zone make up the fully qualified domain name associated with the public IP address."
+      }
+    },
     "agentVMSize": {
       "type": "string",
       "metadata": {
