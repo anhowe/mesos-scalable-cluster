@@ -220,7 +220,6 @@
             "name": "[variables('nodesLbBackendPoolName')]"
           }
         ],
-        "probes": [],
         "loadBalancingRules": [
           {
             "name": "LBRule",
