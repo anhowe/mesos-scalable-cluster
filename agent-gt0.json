@@ -282,11 +282,6 @@
                 {
                   "id": "[concat(variables('nodesLbID'), '/backendAddressPools/', variables('nodesLbBackendPoolName'))]"
                 }
-              ],
-              "loadBalancerInboundNatRules": [
-                {
-                  "id": "[concat(variables('nodesLbID'),'/inboundNatRules/SSH-',parameters('agentVMNamePrefix'),copyIndex(1))]"
-                }
               ]
             }
           }
