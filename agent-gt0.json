@@ -148,6 +148,7 @@
     "nodesLbIPConfigName": "NodesAppLBFrontEnd",
     "nodesLbIPConfigID": "[concat(variables('nodesLbID'),'/frontendIPConfigurations/', variables('nodesLbIPConfigName'))]",
     "nodesLbBackendPoolName": "node-app-pool",
+    "lbProbeID": "[concat(variables('nodesLbID'),'/probes/tcpProbe')]",
     "vmsPerStorageAccount": 10,
     "storageAccountsCount": "[add(div(parameters('agentCount'), variables('vmsPerStorageAccount')), mod(add(mod(parameters('agentCount'), variables('vmsPerStorageAccount')),2), add(mod(parameters('agentCount'), variables('vmsPerStorageAccount')),1)))]",
     "storageAccountPrefix": [
